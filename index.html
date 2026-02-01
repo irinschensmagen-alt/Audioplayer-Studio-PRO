@@ -126,6 +126,11 @@ button {
 <!-- PANEL -->
 <div class="panel">
 <h2>🎛 Audio Player Studio PRO</h2>
+<div style="font-size:12px;opacity:.7;margin-bottom:10px">Режим интерфейса</div>
+<select id="mode">
+<option value="teacher">🎓 Преподаватель</option>
+<option value="student">👩‍🎓 Ученик</option>
+</select>
 
 <label>🌗 Тема</label>
 <select id="theme">
@@ -163,8 +168,8 @@ button {
 </div>
 
 <!-- PLAYER -->
-<div class="player-frame">
-<div class="player" id="player">
+<div class="player-frame" style="align-items:flex-start">
+<div class="player" id="player" style="margin-top:0">
 <div class="cover" id="cover"></div>
 
 <div class="controls">
@@ -176,10 +181,12 @@ button {
 <button onclick="record()">🎙</button>
 </div>
 
+<label style="font-size:12px;opacity:.7">⏯ Позиция воспроизведения</label>
 <input class="timeline" type="range" min="0" value="0" step="0.01" onchange="audio.currentTime=this.value">
-<div class="time" id="time">00:00 / 00:00</div>
+<div class="time" id="time" style="text-align:left;font-weight:600">⏱ 00:00 / 00:00</div>
 
 <div class="panel" style="margin-top:8px">
+<div style="font-size:12px;opacity:.7;margin-bottom:4px">🎚 Аудиомикшер</div>
 <strong>🎚 Микшер</strong>
 <label>Громкость</label>
 <input type="range" min="0" max="1" step="0.01" value="1" onchange="audio.volume=this.value">
@@ -211,15 +218,15 @@ let current = 0;
 let recorder, chunks=[];
 
 const langs = {
-  ru:{play:'Play',list:'Playlist'},
-  en:{play:'Play',list:'Playlist'},
-  de:{play:'Abspielen',list:'Playlist'},
-  fr:{play:'Lecture',list:'Playlist'},
-  es:{play:'Reproducir',list:'Lista'},
-  it:{play:'Riproduci',list:'Playlist'},
-  zh:{play:'播放',list:'播放列表'},
-  ar:{play:'تشغيل',list:'قائمة'},
-  hi:{play:'चलाएँ',list:'सूची'}
+  ru:{player:'Плеер',mixer:'Микшер',playlist:'Плейлист'},
+  en:{player:'Player',mixer:'Mixer',playlist:'Playlist'},
+  de:{player:'Player',mixer:'Mixer',playlist:'Playlist'},
+  fr:{player:'Lecteur',mixer:'Mixeur',playlist:'Playlist'},
+  es:{player:'Reproductor',mixer:'Mezclador',playlist:'Lista'},
+  it:{player:'Lettore',mixer:'Mixer',playlist:'Playlist'},
+  zh:{player:'播放器',mixer:'混音器',playlist:'播放列表'},
+  ar:{player:'مشغل',mixer:'خلاط',playlist:'قائمة'},
+  hi:{player:'प्लेयर',mixer:'मिक्सर',playlist:'सूची'}
 };
 
 Object.keys(langs).forEach(l=>{
