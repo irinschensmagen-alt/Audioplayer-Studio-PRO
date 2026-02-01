@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Studio v7.0 - Final Fix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --p: #38bdf8; --bg: #0f172a; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: #020617; color: #fff; overflow: hidden; }
+        .app { display: flex; height: 100vh; }
+        .side { width: 360px; background: var(--bg); padding: 30px; border-right: 1px solid #1e293b; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; }
+        h2 { color: var(--p); font-size: 22px; margin: 0; font-weight: 700; }
+        .f { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 10px; color: #94a3b8; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+        input { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 14px; color: #fff; outline: none; transition: 0.2s; }
+        input[type="color"] { height: 50px; padding: 5px; cursor: pointer; width: 100%; }
+        .btn { background: linear-gradient(135deg, #38bdf8, #818cf8); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; text-transform: uppercase; margin-top: auto; transition: 0.3s; }
+        .main { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 30px 30px; }
+        #preview { box-shadow: 0 30px 60px rgba(0,0,0,0.6); border-radius: 40px; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <aside class="side">
+        <h2>Audio Studio v7.0</h2>
+        <div class="f"><label>Цвет темы (Live):</label><input type="color" id="c" value="#38bdf8"></div>
+        <div class="f"><label>GitHub URL:</label><input type="text" id="u" value="https://github.com/irinschensmagen-alt/audioplayer/tree/main/audio"></div>
+        <div class="f"><label>Фон плеера (URL):</label><input type="text" id="b" placeholder="Вставьте ссылку на картинку"></div>
+        <button class="btn" onclick="copy()">Копировать для Genially</button>
+    </aside>
+    <main class="main">
+        <div id="preview"></div>
+    </main>
+</div>
+
+<script>
+    function draw() {
+        const col = document.getElementById('c').value;
+        const url = document.getElementById('u').value.trim();
+        const bg = document.getElementById('b').value.trim();
+        document.documentElement.style.setProperty('--p', col);
+        
+        let api, raw;
+        try {
+            const p = url.replace('https://github.com/', '').split('/');
+            const user = p[0], repo = p[1], branch = p[3] || 'main', path = p.slice(4).join('/');
+            api = `https://api.github.com/repos/${user}/${repo}/contents/${path}?ref=${branch}`;
+            raw = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`;
+        } catch(e) {}
+
+        const playerCode = `
+<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:${bg ? "url('"+bg+"')" : "#020617"} center/cover no-repeat;">
+    <div style="width:340px; background:rgba(255,255,255,0.12); backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px); border-radius:40px; border:1px solid rgba(255,255,255,0.2); padding:35px; font-family:sans-serif; color:white; text-align:center;">
+        <img src="${raw}/cover.jpg" style="width:130px; height:130px; border-radius:28px; object-fit:cover; margin-bottom:20px; border:3px solid white;" onerror="this.src='https://via.placeholder.com/130/ffffff/000000?text=Music'">
+        <div id="t" style="font-weight:700; font-size:18px; margin-bottom:20px;">Загрузка...</div>
+        <div style="display:flex; justify-content:center; gap:25px; align-items:center; margin-bottom:30px;">
+            <button onclick="pPr()" style="background:none; border:none; color:white; font-size:26px; cursor:pointer;">⏮</button>
+            <button onclick="pPl()" id="pB" style="width:65px; height:65px; background:white; color:black; border-radius:50%; border:none; font-size:24px; cursor:pointer; display:flex; align-items:center; justify-content:center;">▶</button>
+            <button onclick="pNe()" style="background:none; border:none; color:white; font-size:26px; cursor:pointer;">⏭</button>
+        </div>
+        <input type="range" id="s" value="0" style="width:100%; accent-color:${col}; cursor:pointer;">
+        <audio id="a" crossorigin="anonymous"></audio>
+    </div>
+</div>
+<script>
+(function(){
+    const a=document.getElementById('a'), t=document.getElementById('t'), b=document.getElementById('pB'), s=document.getElementById('s');
+    let trk=[], cur=0;
+    fetch('${api}').then(r=>r.json()).then(d=>{
+        trk=d.filter(f=>f.name.toLowerCase().endsWith('.mp3')).map(f=>({n:f.name.replace('.mp3',''), u:f.download_url}));
+        if(trk.length) load(0, false); else t.innerText='Пусто';
+    }).catch(()=>t.innerText='Ошибка');
+    function load(i, p=true){ cur=i; a.src=trk[i].u; t.innerText=trk[i].n; if(p) a.play().then(()=>b.innerText='⏸'); }
+    window.pPl=()=>{ if(a.paused){ a.play(); b.innerText='⏸'; } else { a.pause(); b.innerText='▶'; } };
+    window.pNe=()=>{ cur=(cur+1)%trk.length; load(cur); };
+    window.pPr=()=>{ cur=(cur-1+trk.length)%trk.length; load(cur); };
+    a.ontimeupdate=()=>s.value=(a.currentTime/a.duration)*100||0;
+    s.oninput=()=>a.currentTime=(s.value/100)*a.duration;
+})();
+<\/script>`;
+
+        const iframe = `<iframe srcdoc='${playerCode.replace(/'/g, "&apos;").replace(/<\/script>/g, '<\\/script>')}' width="400" height="550" style="border:none;"></iframe>`;
+        document.getElementById('preview').innerHTML = iframe;
+        window.finalResult = iframe;
+    }
+
+    document.getElementById('c').oninput = draw;
+    document.getElementById('u').oninput = draw;
+    document.getElementById('b').oninput = draw;
+    function copy() { navigator.clipboard.writeText(window.finalResult); alert("Скопировано!"); }
+    window.onload = draw;
+</script>
+</body>
+</html>
