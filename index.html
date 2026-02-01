@@ -6,15 +6,15 @@
 <title>Studio Pro Audio Player</title>
 <style>
   body { font-family: 'Segoe UI', sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-  .player { background: #fff; padding: 30px; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 460px; max-width: 95%; }
+  .player { background: #fff; padding: 30px; border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); width: 480px; max-width: 95%; }
   h2 { text-align: center; margin-top: 0; font-size: 24px; color: #1e293b; }
   .controls { display: flex; justify-content: space-around; align-items: center; margin: 18px 0; }
   .controls button { font-size: 20px; background: #3b82f6; color: #fff; border: none; padding: 10px 14px; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
   .controls button:hover:not(:disabled) { background: #2563eb; }
   #timer { text-align: center; margin-bottom: 12px; color: #475569; font-size: 15px; }
-  .playlist { max-height: 240px; overflow-y: auto; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 6px 0; }
+  .playlist { max-height: 260px; overflow-y: auto; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 6px 0; }
   .track { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; cursor: pointer; transition: background 0.2s; border-radius: 8px; margin: 2px 0; }
-  .track.active { background: #dbeafe; border-left: 5px solid #3b82f6; }
+  .track.active { border-left: 5px solid #3b82f6; background: #dbeafe; }
   .progress-bar { height: 4px; background: #3b82f6; width: 0%; border-radius: 2px; margin-top: 3px; }
   .lang-select, .mode-select { margin-top: 12px; width: 100%; padding: 8px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 15px; }
   #download-btn { margin-top: 10px; width: 100%; padding: 10px; background: #10b981; color: #fff; border: none; border-radius: 10px; font-size: 15px; cursor: pointer; transition: background 0.2s; }
@@ -73,10 +73,8 @@ let trackTitles = {};
 let currentTrack = 0;
 let isPlaying = false;
 
-const translations = {
-  en: { play: '▶', pause: '⏸', title: 'Studio Pro Audio Player' },
-  ru: { play: '▶', pause: '⏸', title: 'Аудиоплеер Studio Pro' }
-};
+const translations = { en: { play: '▶', pause: '⏸', title: 'Studio Pro Audio Player' }, ru: { play: '▶', pause: '⏸', title: 'Аудиоплеер Studio Pro' } };
+const levelColors = { easy: '#10b981', medium: '#3b82f6', hard: '#f97316' };
 
 // Загрузка треков и JSON
 async function loadPlaylist() {
@@ -91,9 +89,9 @@ async function loadPlaylist() {
 
     tracks = (await response.json())
       .filter(f => f.name.endsWith('.mp3'))
-      .sort((a, b) => {
-        const numA = parseInt(a.name.match(/\d+/)?.[0] || 0);
-        const numB = parseInt(b.name.match(/\d+/)?.[0] || 0);
+      .sort((a,b)=> {
+        const numA=parseInt(a.name.match(/\d+/)?.[0]||0);
+        const numB=parseInt(b.name.match(/\d+/)?.[0]||0);
         return numA - numB;
       });
 
@@ -105,126 +103,114 @@ async function loadPlaylist() {
   }
 }
 
-// Построение плейлиста
+// Построение плейлиста с цветами уровня
 function buildPlaylist() {
   playlistContainer.innerHTML = '';
-  tracks.forEach((track, index) => {
+  tracks.forEach((track,index)=>{
     const div = document.createElement('div');
-    div.className = 'track';
-    div.dataset.index = index;
-    div.onclick = () => {
-      if (modeSelect.value === 'readonly') return;
-      loadTrack(index);
-    };
+    div.className='track';
+    div.dataset.index=index;
+    div.onclick = () => { if(modeSelect.value==='readonly') return; loadTrack(index); };
     playlistContainer.appendChild(div);
   });
   updateActiveTrack();
 }
 
 // Загрузка трека
-function loadTrack(index) {
-  currentTrack = index;
-  audio.src = tracks[index].download_url;
+function loadTrack(index){
+  currentTrack=index;
+  audio.src=tracks[index].download_url;
   playAudio();
   updateActiveTrack();
   updateDownloadButton();
 }
 
-// Обновление активного трека
-function updateActiveTrack() {
-  document.querySelectorAll('.track').forEach((t, i) => {
-    t.classList.toggle('active', i === currentTrack);
-    const lang = languageSelect.value;
-    const title = trackTitles[tracks[i].name]?.[lang] || tracks[i].name;
-    t.textContent = title;
+// Обновление активного трека с цветовой маркировкой
+function updateActiveTrack(){
+  document.querySelectorAll('.track').forEach((t,i)=>{
+    t.classList.toggle('active', i===currentTrack);
+    const lang=languageSelect.value;
+    const info=trackTitles[tracks[i].name]||{};
+    const title=info[lang]||tracks[i].name;
+    t.textContent=title;
+    t.style.borderLeftColor = levelColors[info.level]||'#3b82f6';
 
-    if (i === currentTrack && !t.querySelector('.progress-bar')) {
-      const bar = document.createElement('div');
-      bar.className = 'progress-bar';
+    if(i===currentTrack && !t.querySelector('.progress-bar')){
+      const bar=document.createElement('div');
+      bar.className='progress-bar';
       t.appendChild(bar);
     }
   });
 }
 
 // Воспроизведение/пауза
-function playAudio() {
-  if (!isPlaying) { audio.play(); isPlaying = true; } 
-  else { audio.pause(); isPlaying = false; }
+function playAudio(){
+  if(!isPlaying){audio.play(); isPlaying=true;} else{audio.pause(); isPlaying=false;}
   updatePlayButton();
 }
 
-function updatePlayButton() {
-  const lang = languageSelect.value;
-  playBtn.textContent = isPlaying ? translations[lang].pause : translations[lang].play;
+function updatePlayButton(){
+  const lang=languageSelect.value;
+  playBtn.textContent=isPlaying?translations[lang].pause:translations[lang].play;
 }
 
 // Следующий/предыдущий трек
-function nextTrack() { 
-  if(modeSelect.value==='readonly') return;
-  currentTrack = (currentTrack + 1) % tracks.length; 
-  loadTrack(currentTrack); 
-}
-function prevTrack() { 
-  if(modeSelect.value==='readonly') return;
-  currentTrack = (currentTrack - 1 + tracks.length) % tracks.length; 
-  loadTrack(currentTrack); 
-}
+function nextTrack(){ if(modeSelect.value==='readonly') return; currentTrack=(currentTrack+1)%tracks.length; loadTrack(currentTrack);}
+function prevTrack(){ if(modeSelect.value==='readonly') return; currentTrack=(currentTrack-1+tracks.length)%tracks.length; loadTrack(currentTrack);}
 
 // Таймер и прогресс
-audio.addEventListener('timeupdate', () => {
-  const current = formatTime(audio.currentTime);
-  const duration = formatTime(audio.duration || 0);
-  timer.textContent = `${current} / ${duration}`;
-
-  document.querySelectorAll('.track').forEach((t, i) => {
-    const bar = t.querySelector('.progress-bar');
-    if (bar) bar.style.width = (i === currentTrack ? (audio.currentTime / audio.duration) * 100 : 0) + '%';
+audio.addEventListener('timeupdate',()=>{
+  const current=formatTime(audio.currentTime);
+  const duration=formatTime(audio.duration||0);
+  timer.textContent=`${current} / ${duration}`;
+  document.querySelectorAll('.track').forEach((t,i)=>{
+    const bar=t.querySelector('.progress-bar');
+    if(bar) bar.style.width=(i===currentTrack?(audio.currentTime/audio.duration)*100:0)+'%';
   });
 });
 
 audio.addEventListener('ended', nextTrack);
 
-function formatTime(sec) {
-  if (isNaN(sec)) return '00:00';
-  const m = Math.floor(sec / 60).toString().padStart(2, '0');
-  const s = Math.floor(sec % 60).toString().padStart(2, '0');
+function formatTime(sec){
+  if(isNaN(sec)) return '00:00';
+  const m=Math.floor(sec/60).toString().padStart(2,'0');
+  const s=Math.floor(sec%60).toString().padStart(2,'0');
   return `${m}:${s}`;
 }
 
 // Кнопки управления
-playBtn.onclick = playAudio;
-nextBtn.onclick = nextTrack;
-prevBtn.onclick = prevTrack;
+playBtn.onclick=playAudio; nextBtn.onclick=nextTrack; prevBtn.onclick=prevTrack;
 
 // Смена языка
-languageSelect.onchange = () => {
-  const lang = languageSelect.value;
-  playerTitle.textContent = translations[lang].title;
+languageSelect.onchange=()=>{
+  const lang=languageSelect.value;
+  playerTitle.textContent=translations[lang].title;
   updatePlayButton();
   updateActiveTrack();
   updateDownloadButton();
 };
 
 // Смена режима
-modeSelect.onchange = () => {
-  const readonly = modeSelect.value==='readonly';
-  prevBtn.disabled = readonly;
-  nextBtn.disabled = readonly;
-  document.querySelectorAll('.track').forEach(t => t.style.pointerEvents = readonly ? 'none' : 'auto');
+modeSelect.onchange=()=>{
+  const readonly=modeSelect.value==='readonly';
+  prevBtn.disabled=readonly;
+  nextBtn.disabled=readonly;
+  document.querySelectorAll('.track').forEach(t=>t.style.pointerEvents=readonly?'none':'auto');
 };
 
-// Кнопка скачивания
-downloadBtn.onclick = () => {
-  const link = document.createElement('a');
-  link.href = tracks[currentTrack].download_url;
-  link.download = tracks[currentTrack].name;
+// Скачивание трека
+downloadBtn.onclick=()=>{
+  const link=document.createElement('a');
+  link.href=tracks[currentTrack].download_url;
+  link.download=tracks[currentTrack].name;
   link.click();
 };
 
-function updateDownloadButton() {
-  const lang = languageSelect.value;
-  const title = trackTitles[tracks[currentTrack].name]?.[lang] || tracks[currentTrack].name;
-  downloadBtn.textContent = (lang==='ru'?'⬇ Скачать ':'⬇ Download ') + title;
+function updateDownloadButton(){
+  const lang=languageSelect.value;
+  const info=trackTitles[tracks[currentTrack].name]||{};
+  const title=info[lang]||tracks[currentTrack].name;
+  downloadBtn.textContent=(lang==='ru'?'⬇ Скачать ':'⬇ Download ')+title;
 }
 
 // Инициализация
