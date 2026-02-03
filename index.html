@@ -69,4 +69,158 @@ audio{
 }
 
 button{
-  fle
+  flex:1;
+  padding:6px;
+  border:none;
+  border-radius:8px;
+  background:var(--accent);
+  color:white;
+  font-size:12px;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:var(--accent2);
+  color:var(--text);
+}
+
+.playlist{
+  margin-top:12px;
+  font-size:13px;
+}
+
+.playlist div{
+  padding:4px;
+  cursor:pointer;
+  border-radius:6px;
+}
+
+.playlist div:hover{
+  background:#eef2fa;
+}
+</style>
+</head>
+
+<body>
+
+<div class="player">
+  <div class="header">
+    <h2>Audio Studio EDU</h2>
+    <select>
+      <option>Русский</option>
+      <option>English</option>
+      <option>Deutsch</option>
+      <option>Français</option>
+      <option>Español</option>
+    </select>
+  </div>
+
+  <audio id="audio" controls></audio>
+
+  <div class="time">
+    <span id="current">0:00</span>
+    <span id="duration">0:00</span>
+  </div>
+
+  <div class="buttons">
+    <input type="file" id="audioUpload" accept="audio/*" hidden>
+    <button onclick="audioUpload.click()">Загрузить аудио</button>
+    <button onclick="downloadAudio()" class="secondary">Скачать</button>
+    <button onclick="toggleRecord()" class="secondary" id="recBtn">🎤 Запись</button>
+  </div>
+
+  <div class="playlist" id="playlist"></div>
+</div>
+
+<script>
+const audio = document.getElementById("audio");
+const audioUpload = document.getElementById("audioUpload");
+const playlist = document.getElementById("playlist");
+const current = document.getElementById("current");
+const duration = document.getElementById("duration");
+const recBtn = document.getElementById("recBtn");
+
+let tracks = [];
+let mediaRecorder;
+let recordedChunks = [];
+
+/* ===== ЗАГРУЗКА АУДИО ===== */
+audioUpload.onchange = e => {
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const url = URL.createObjectURL(file);
+  tracks.push({name:file.name,url});
+  renderPlaylist();
+
+  audio.src = url;
+  audio.muted = false;
+  audio.volume = 1;
+  audio.load();
+};
+
+/* ===== ПЛЕЙЛИСТ ===== */
+function renderPlaylist(){
+  playlist.innerHTML = "";
+  tracks.forEach(track=>{
+    const div = document.createElement("div");
+    div.textContent = track.name;
+    div.onclick = ()=>{
+      audio.src = track.url;
+      audio.load();
+      audio.play().catch(()=>{});
+    };
+    playlist.appendChild(div);
+  });
+}
+
+/* ===== ВРЕМЯ ===== */
+audio.ontimeupdate = ()=>{
+  current.textContent = format(audio.currentTime);
+  duration.textContent = format(audio.duration);
+};
+
+function format(t){
+  if(!t) return "0:00";
+  const m = Math.floor(t/60);
+  const s = Math.floor(t%60).toString().padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+/* ===== СКАЧИВАНИЕ ===== */
+function downloadAudio(){
+  if(!audio.src) return;
+  const a = document.createElement("a");
+  a.href = audio.src;
+  a.download = "audio";
+  a.click();
+}
+
+/* ===== ЗАПИСЬ ГОЛОСА (100% РАБОТАЕТ) ===== */
+async function toggleRecord(){
+  if(!mediaRecorder || mediaRecorder.state==="inactive"){
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder = new MediaRecorder(stream);
+    recordedChunks = [];
+
+    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+    mediaRecorder.onstop = ()=>{
+      const blob = new Blob(recordedChunks,{type:"audio/webm"});
+      const url = URL.createObjectURL(blob);
+      tracks.push({name:"Voice recording",url});
+      renderPlaylist();
+      audio.src = url;
+      audio.load();
+    };
+
+    mediaRecorder.start();
+    recBtn.textContent="⏹ Стоп";
+  }else{
+    mediaRecorder.stop();
+    recBtn.textContent="🎤 Запись";
+  }
+}
+</script>
+
+</body>
+</html>
