@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio EDU Global Pro Max</title>
+    <title>Audio Studio EDU Global Pro</title>
     <style>
         :root {
             --primary-color: #6c5ce7;
             --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
             --panel-bg: #ffffff;
-            --text-main: #333;
         }
 
-        /* Шаблоны (Soft Gradient 1-6) */
+        /* Шаблоны */
         .template-1 { --primary-color: #6c5ce7; --bg-gradient: linear-gradient(135deg, #a29bfe, #6c5ce7); }
         .template-2 { --primary-color: #ff7675; --bg-gradient: linear-gradient(135deg, #fab1a0, #ff7675); }
         .template-3 { --primary-color: #00b894; --bg-gradient: linear-gradient(135deg, #55efc4, #00b894); }
@@ -23,68 +22,63 @@
         body {
             font-family: 'Segoe UI', sans-serif;
             background: var(--bg-gradient);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
             transition: 0.5s;
         }
 
         .container {
-            display: grid;
-            grid-template-columns: 380px 520px;
-            gap: 20px;
-            padding: 20px;
+            display: grid; grid-template-columns: 380px 520px; gap: 25px; padding: 20px;
         }
 
         .panel {
-            background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: var(--panel-bg); padding: 25px; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        .header-area { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
-        .logo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color); }
+        .header-area { 
+            display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; 
+        }
+        
+        /* Логотип теперь ищет logo.png */
+        .logo { 
+            width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color);
+            background: #f0f0f0;
+        }
 
-        .form-group { margin-bottom: 10px; }
-        label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 3px; font-weight: 600; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 5px; font-weight: 600; }
         
         select, input, textarea {
-            width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.85rem; box-sizing: border-box; background: #fff;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 0.9rem; box-sizing: border-box;
         }
 
         .btn {
-            width: 100%; padding: 10px; margin-top: 5px; border: none; border-radius: 10px;
-            background: var(--primary-color); color: white; cursor: pointer; font-weight: 600;
-            display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+            width: 100%; min-height: 50px; border: none; border-radius: 15px;
+            background: var(--primary-color); color: white; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px;
+            font-size: 1rem; transition: 0.3s;
         }
+        .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        .btn:hover { filter: brightness(1.1); }
-        .btn.recording { background: #ff4757; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
-
-        .mixer-box { background: #f9f9f9; padding: 12px; border-radius: 12px; margin-top: 10px; border: 1px solid #eee; }
-        .mixer-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.75rem; margin-bottom: 5px; }
-        .mixer-row input[type="range"] { width: 120px; }
+        .mixer-box { background: #f9f9fb; padding: 15px; border-radius: 18px; border: 1px solid #eee; margin-top: 10px; }
+        .mixer-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 0.85rem; }
+        .mixer-row input { width: 150px; accent-color: var(--primary-color); }
 
         .player-display { display: flex; flex-direction: column; align-items: center; }
         .cover-art { 
-            width: 100%; height: 220px; 
-            background: #eee url('https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=500') center/cover; 
-            border-radius: 15px; margin-bottom: 10px; border: 3px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            transition: background 0.5s ease;
-        }
-        
-        #iframe-output {
-            width: 100%; height: 60px; margin-top: 10px; background: #f4f4f4; border: 1px solid #ccc; border-radius: 8px;
-            font-family: monospace; font-size: 0.7rem; padding: 8px; resize: none;
+            width: 100%; height: 260px; background: #eee center/cover no-repeat; border-radius: 20px; 
+            margin-bottom: 15px; border: 5px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .controls { display: flex; gap: 15px; margin: 10px 0; }
-        .control-btn { background: var(--primary-color); color: white; border: none; width: 50px; height: 50px; border-radius: 15px; cursor: pointer; font-size: 1.2rem; }
+        #timer-display { font-size: 1.5rem; font-weight: bold; color: #ff4757; margin-bottom: 10px; display: none; }
+
+        .controls { display: flex; gap: 20px; margin: 15px 0; }
+        .control-btn { 
+            background: var(--primary-color); color: white; border: none; width: 60px; height: 60px; 
+            border-radius: 20px; cursor: pointer; font-size: 1.5rem; transition: 0.2s;
+        }
+        .control-btn:active { transform: scale(0.9); }
+
+        #iframe-output { height: 70px; background: #f4f4f9; border: 1px solid #ccd; font-family: monospace; font-size: 0.8rem; padding: 10px; }
     </style>
 </head>
 <body class="template-1">
@@ -92,27 +86,22 @@
 <div class="container">
     <div class="panel">
         <div class="header-area">
-            <img src="7929d202-ccf0-4e08-8785-785e9179ebd0_removalai_preview.png" class="logo" alt="Logo">
-            <h2 id="ui-title">Audio Studio EDU</h2>
+            <img src="logo.png" class="logo" onerror="this.src='https://via.placeholder.com/55?text=Logo'" alt="Logo">
+            <h2 style="margin:0;">Audio Studio EDU</h2>
         </div>
         
         <div class="form-group">
-            <label id="lbl-lang">🌐 Выбор языка</label>
+            <label>🌐 Язык интерфейса</label>
             <select id="langSelect">
-                <option value="ru">Русский</option><option value="en">English</option>
-                <option value="zh">中文</option><option value="es">Español</option>
-                <option value="de">Deutsch</option><option value="hi">हिन्दी</option>
-                <option value="ar">العربية</option><option value="fa">فارسی</option>
-                <option value="pt">Português</option><option value="ja">日本語</option>
-                <option value="pa">ਪੰਜਾਬੀ</option><option value="bn">বাংলা</option>
-                <option value="fr">Français</option><option value="th">ไทย</option>
-                <option value="tr">Türkçe</option><option value="ko">한국어</option>
-                <option value="el">Ελληνικά</option><option value="prs">دری</option>
+                <option value="ru">Русский</option>
+                <option value="zh">中文</option>
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label id="lbl-mode">🎓 Режим</label>
+            <label>🎓 Режим обучения</label>
             <select id="modeSelect">
                 <option value="teacher">Учитель (Teacher)</option>
                 <option value="student">Ученик (Student)</option>
@@ -121,7 +110,7 @@
         </div>
 
         <div class="form-group">
-            <label id="lbl-tmpl">🎨 Template</label>
+            <label>🎨 Выберите тему (Template)</label>
             <select id="templateSelect">
                 <option value="template-1">Soft Gradient 1</option>
                 <option value="template-2">Soft Gradient 2</option>
@@ -133,18 +122,165 @@
         </div>
 
         <div class="mixer-box">
-            <label id="lbl-mixer" style="color: var(--primary-color); margin-bottom: 8px; display: block;">🎚️ Аудиомикшер PRO</label>
-            <div class="mixer-row"><span id="lbl-vol">Громкость</span><input type="range" id="volRange" min="0" max="1" step="0.1" value="1"></div>
-            <div class="mixer-row"><span id="lbl-bass">Бас</span><input type="range" id="bassRange" min="-10" max="20" step="1" value="0"></div>
-            <div class="mixer-row" style="background: #efecff; padding: 5px; border-radius: 5px;">
-                <span id="lbl-robot" style="font-weight: bold;">🤖 РОБОТ</span>
-                <input type="checkbox" id="robotCheck" style="width: 18px; height: 18px;">
+            <label style="color: var(--primary-color); font-weight: bold; margin-bottom: 10px; display: block;">🎚️ Аудиомикшер PRO</label>
+            <div class="mixer-row"><span>Громкость</span><input type="range" id="volRange" min="0" max="1" step="0.1" value="1"></div>
+            <div class="mixer-row"><span>Бас</span><input type="range" id="bassRange" min="-10" max="20" step="1" value="0"></div>
+            <div class="mixer-row" style="background: #efecff; padding: 8px; border-radius: 10px;">
+                <span>🤖 Эффект РОБОТ</span>
+                <input type="checkbox" id="robotCheck" style="width: 22px; height: 22px;">
             </div>
         </div>
 
-        <button class="btn" id="recordBtn"><span id="btn-rec-text">🎤 Запись голоса</span></button>
-        <button class="btn" id="randomCoverBtn" style="background: #55efc4; color: #333;"><span id="btn-rand-text">✨ Случайная обложка</span></button>
+        <button class="btn" id="randomCoverBtn" style="background: #55efc4; color: #2d3436;">✨ Случайная обложка</button>
         
-        <label id="lbl-iframe" style="margin-top:10px;">📦 Код iframe для Genially:</label>
+        <label style="margin-top:20px;">📦 Код iframe для Genially:</label>
         <textarea id="iframe-output" readonly></textarea>
-        <button class="btn" id="copyIframeBtn" style="background: #a29bfe;"><span id="btn-copy-text">Ско
+        <button class="btn" id="copyIframeBtn" style="background: #a29bfe;">Скопировать код</button>
+    </div>
+
+    <div class="panel player-display">
+        <div class="cover-art" id="coverArt" style="background-image: url('https://picsum.photos/seed/music/500/500');"></div>
+        
+        <div id="timer-display">02:00</div>
+        
+        <canvas id="visualizer" style="width:100%; height:60px;"></canvas>
+        
+        <div style="width:100%;">
+            <div id="timeDisplay" style="text-align:center; font-size:1rem; margin-bottom: 8px; font-family: monospace;">00:00 / 00:00</div>
+            <input type="range" id="progressBar" value="0" min="0" step="0.1" style="width:100%;">
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" id="rewindBtn">⏪</button>
+            <button class="control-btn" id="playBtn" style="width:80px; height:80px; border-radius: 50%; font-size: 2rem;">▶</button>
+            <button class="control-btn" id="forwardBtn">⏩</button>
+        </div>
+        
+        <div class="form-group" style="width:100%;">
+            <label>📁 Загрузить Аудио и Обложку</label>
+            <input type="file" id="audioUpload" accept="audio/*">
+            <input type="file" id="coverUpload" accept="image/*" style="margin-top:8px;">
+        </div>
+        <audio id="mainAudio" crossorigin="anonymous"></audio>
+    </div>
+</div>
+
+<script>
+    const audio = document.getElementById('mainAudio');
+    const playBtn = document.getElementById('playBtn');
+    const modeSelect = document.getElementById('modeSelect');
+    const timerDisplay = document.getElementById('timer-display');
+    const templateSelect = document.getElementById('templateSelect');
+    
+    let audioContext, analyser, source, bassFilter, distortion;
+    let examInterval;
+
+    // Инициализация звукового движка
+    function initAudio() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            source = audioContext.createMediaElementSource(audio);
+            
+            bassFilter = audioContext.createBiquadFilter();
+            bassFilter.type = "lowshelf";
+            bassFilter.frequency.value = 200;
+
+            distortion = audioContext.createWaveShaper();
+            distortion.oversample = '4x';
+
+            source.connect(bassFilter).connect(distortion).connect(analyser).connect(audioContext.destination);
+            drawVisualizer();
+        }
+    }
+
+    // Эффект Робота
+    function makeDistortion(amount) {
+        let n = 44100, curve = new Float32Array(n), deg = Math.PI / 180;
+        for (let i = 0 ; i < n; ++i ) {
+            let x = i * 2 / n - 1;
+            curve[i] = ( 3 + amount ) * x * 20 * deg / ( Math.PI + amount * Math.abs(x) );
+        }
+        return curve;
+    }
+
+    document.getElementById('robotCheck').onchange = (e) => {
+        if (distortion) distortion.curve = e.target.checked ? makeDistortion(400) : null;
+    };
+
+    document.getElementById('volRange').oninput = (e) => audio.volume = e.target.value;
+    document.getElementById('bassRange').oninput = (e) => { if (bassFilter) bassFilter.gain.value = e.target.value; };
+
+    // Таймер Экзамена
+    modeSelect.onchange = () => {
+        timerDisplay.style.display = (modeSelect.value === 'exam') ? 'block' : 'none';
+        timerDisplay.innerText = "02:00";
+    };
+
+    function startExam() {
+        let time = 120;
+        clearInterval(examInterval);
+        examInterval = setInterval(() => {
+            time--;
+            let m = Math.floor(time/60), s = time%60;
+            timerDisplay.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            if (time <= 0) { clearInterval(examInterval); audio.pause(); }
+        }, 1000);
+    }
+
+    // Управление плеером
+    playBtn.onclick = () => {
+        if (!audio.src) return;
+        initAudio();
+        if (audio.paused) {
+            audio.play();
+            playBtn.innerText = '⏸';
+            if (modeSelect.value === 'exam') startExam();
+        } else {
+            audio.pause();
+            playBtn.innerText = '▶';
+            clearInterval(examInterval);
+        }
+    };
+
+    // Случайная обложка
+    document.getElementById('randomCoverBtn').onclick = () => {
+        const id = Math.floor(Math.random() * 1000);
+        document.getElementById('coverArt').style.backgroundImage = `url('https://picsum.photos/seed/${id}/500/500')`;
+    };
+
+    // Визуализатор
+    function drawVisualizer() {
+        requestAnimationFrame(drawVisualizer);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+        const ctx = document.getElementById('visualizer').getContext('2d');
+        ctx.clearRect(0, 0, 300, 100);
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
+        for (let i = 0; i < 60; i++) ctx.fillRect(i * 5, 60, 3, -(data[i] / 4));
+    }
+
+    // Iframe и Прогресс
+    document.getElementById('copyIframeBtn').onclick = () => {
+        const code = `<iframe src="${window.location.href}" width="100%" height="750px" frameborder="0"></iframe>`;
+        navigator.clipboard.writeText(code);
+        alert("Код для Genially скопирован!");
+    };
+
+    templateSelect.onchange = () => document.body.className = templateSelect.value;
+    
+    document.getElementById('audioUpload').onchange = (e) => { if (e.target.files[0]) { audio.src = URL.createObjectURL(e.target.files[0]); audio.load(); }};
+    document.getElementById('coverUpload').onchange = (e) => { if (e.target.files[0]) document.getElementById('coverArt').style.backgroundImage = `url(${URL.createObjectURL(e.target.files[0])})`; };
+    
+    audio.ontimeupdate = () => {
+        document.getElementById('progressBar').max = audio.duration || 0;
+        document.getElementById('progressBar').value = audio.currentTime;
+        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('timeDisplay').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
+    };
+    document.getElementById('progressBar').oninput = (e) => audio.currentTime = e.target.value;
+    document.getElementById('rewindBtn').onclick = () => audio.currentTime -= 10;
+    document.getElementById('forwardBtn').onclick = () => audio.currentTime += 10;
+</script>
+</body>
+</html>
