@@ -3,72 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AUDIO STUDIO PRO | FINAL EDITION</title>
+    <title>AUDIO STUDIO PRO | REFINED</title>
     <style>
         :root { 
             --gold-line: #d4af37;
             --gold-grad: linear-gradient(135deg, #e5c064 0%, #f9e1a9 50%, #d4af37 100%);
-            --chameleon-ultra-soft: radial-gradient(circle at 30% 20%, #ffffff 0%, #f0f9ff 40%, #e6f4ff 100%);
+            --chameleon-soft: radial-gradient(circle at 30% 20%, #ffffff 0%, #f4faff 45%, #eef8ff 100%);
             --sidebar-bg: #fcfdfe;
-            --accent-blue: #1a4a7a; /* Максимальная четкость для шрифта */
+            --text-main: #1a4a7a;
+            --accent-gold: #b8860b;
         }
         
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sidebar-bg); display: flex; height: 100vh; overflow: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--sidebar-bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-main); }
 
-        /* SIDEBAR - Широкий для крупных надписей */
-        .sidebar { width: 450px; background: var(--sidebar-bg); padding: 30px; border-right: 3px solid rgba(212, 175, 55, 0.4); flex-shrink: 0; overflow-y: auto; }
-        .logo-box { text-align: center; margin-bottom: 35px; }
-        .logo-img { width: 130px; height: 130px; border-radius: 50%; border: 5px solid var(--gold-line); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .app-title { color: #b8860b; font-weight: 900; font-size: 2.2rem; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
+        /* SIDEBAR - Оптимизированная ширина */
+        .sidebar { width: 340px; background: var(--sidebar-bg); padding: 20px; border-right: 2px solid rgba(212, 175, 55, 0.3); flex-shrink: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .logo-box { text-align: center; margin-bottom: 10px; }
+        .logo-img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--gold-line); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .app-title { color: var(--accent-gold); font-weight: 900; font-size: 1.3rem; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
         /* PLAYER AREA */
-        .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; background: var(--chameleon-ultra-soft); }
+        .player-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; background: var(--chameleon-soft); }
         
+        /* Пропорциональное окно обложки */
         .cover { 
-            width: 90%; 
-            max-width: 650px; 
+            width: 80%; 
+            max-width: 520px; 
             aspect-ratio: 16/9; 
-            border-radius: 30px; 
+            border-radius: 20px; 
             background: white; 
-            border: 6px solid var(--gold-line); 
-            box-shadow: 0 15px 50px rgba(184, 219, 255, 0.3); 
+            border: 4px solid var(--gold-line); 
+            box-shadow: 0 10px 30px rgba(184, 219, 255, 0.2); 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 10rem; 
-            margin-bottom: 35px; 
+            font-size: 7rem; 
+            margin-bottom: 25px; 
             background-size: cover; 
             background-position: center; 
         }
         .gold-icon { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Крупное время и прогресс */
-        .time { font-weight: 900; font-size: 3rem; margin: 20px 0; color: var(--accent-blue); font-variant-numeric: tabular-nums; }
-        #prog { width: 90%; max-width: 650px; accent-color: var(--gold-line); cursor: pointer; height: 15px; }
+        .time { font-weight: 800; font-size: 1.8rem; margin: 15px 0; color: var(--text-main); font-variant-numeric: tabular-nums; }
+        #prog { width: 80%; max-width: 520px; accent-color: var(--gold-line); cursor: pointer; height: 8px; border-radius: 5px; background: rgba(0,0,0,0.05); }
         
-        .play-btn { width: 130px; height: 130px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 4rem; cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5); display: flex; align-items: center; justify-content: center; }
-        .nav-btn { background: none; border: none; color: var(--accent-blue); font-size: 4.5rem; cursor: pointer; }
+        .play-btn { width: 90px; height: 90px; border-radius: 50%; background: var(--gold-grad); color: white; border: none; font-size: 2.5rem; cursor: pointer; box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .play-btn:hover { transform: scale(1.05); }
+        .nav-btn { background: none; border: none; color: var(--text-main); font-size: 3rem; cursor: pointer; opacity: 0.8; transition: 0.2s; }
+        .nav-btn:hover { opacity: 1; transform: scale(1.1); }
 
-        /* Кнопка замедления - Крупная и четкая */
-        .slow-btn { background: #5a9fd4; color: white; border: none; padding: 25px; border-radius: 15px; font-weight: 900; font-size: 1.8rem; cursor: pointer; width: 100%; margin: 20px 0; text-transform: uppercase; }
+        .slow-btn { background: #5da9e1; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: 900; font-size: 1.1rem; cursor: pointer; width: 100%; text-transform: uppercase; box-shadow: 0 4px 12px rgba(93,169,225,0.25); }
 
-        /* ОКОШКИ С ЗОЛОТЫМИ РАМКАМИ */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 95%; max-width: 1000px; }
+        /* СЕТКА ОКОШЕК */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 90%; max-width: 850px; }
         .card { 
             background: white; 
-            padding: 25px; 
-            border-radius: 25px; 
-            border: 4px solid var(--gold-line); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+            padding: 18px; 
+            border-radius: 20px; 
+            border: 2.5px solid var(--gold-line); 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.03); 
         }
         
-        label { font-size: 1.4rem; font-weight: 900; color: #b8860b; text-transform: uppercase; margin-bottom: 12px; display: block; }
-        .input-row { display: flex; align-items: center; gap: 15px; background: #f9fdff; padding: 10px 20px; border-radius: 15px; margin-top: 10px; height: 70px; border: 2px solid #eef7fc; }
+        label { font-size: 0.85rem; font-weight: 900; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 8px; display: block; letter-spacing: 0.5px; }
+        .input-row { display: flex; align-items: center; gap: 10px; background: #f9fdff; padding: 5px 15px; border-radius: 10px; margin-top: 8px; height: 45px; border: 1.5px solid #eef7fc; }
         
-        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 1.6rem; font-weight: 900; color: var(--accent-blue); }
+        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 1rem; font-weight: 700; color: var(--text-main); cursor: pointer; }
         
-        .file-label { font-size: 1.4rem; font-weight: 900; color: #78a1c4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .x-btn { color: #ff6b6b; border: none; background: none; font-weight: 900; cursor: pointer; font-size: 2.5rem; }
+        .file-label { font-size: 0.9rem; font-weight: 700; color: #78a1c4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+        .x-btn { color: #ff8e8e; border: none; background: none; font-weight: 900; cursor: pointer; font-size: 1.5rem; padding: 0 5px; }
     </style>
 </head>
 <body>
@@ -79,11 +81,13 @@
         <div class="app-title">Audio Studio Pro</div>
     </div>
 
-    <label id="l-lang">LANGUAGE</label>
-    <div class="card"><select id="langSelect" onchange="translateUI()"></select></div>
-
-    <label id="l-mode">MODE</label>
     <div class="card">
+        <label id="l-lang">LANGUAGE</label>
+        <select id="langSelect" onchange="translateUI()"></select>
+    </div>
+
+    <div class="card">
+        <label id="l-mode">MODE</label>
         <select id="modeSelect">
             <option value="study" id="opt-study"></option>
             <option value="master" id="opt-master"></option>
@@ -107,10 +111,11 @@
 
 <div class="player-zone">
     <div class="cover" id="cover"><span class="gold-icon">♫</span></div>
+    
     <input type="range" id="prog" value="0" step="0.1" oninput="manualSeek(this.value)">
     <div class="time" id="time-display">00:00 / 00:00</div>
     
-    <div style="display:flex; align-items:center; gap:70px; margin-bottom:35px;">
+    <div style="display:flex; align-items:center; gap:40px; margin-bottom:25px;">
         <button class="nav-btn" onclick="rewind(-10)">⏪</button>
         <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
         <button class="nav-btn" onclick="rewind(10)">⏩</button>
@@ -119,7 +124,10 @@
     <div class="grid-container">
         <div class="card">
             <label id="l-al">AUDIO</label>
-            <div class="input-row"><input type="text" id="u-aud" oninput="audio.src=this.value"><button class="x-btn" onclick="clearF('u-aud')">✖</button></div>
+            <div class="input-row">
+                <input type="text" id="u-aud" oninput="audio.src=this.value">
+                <button class="x-btn" onclick="clearF('u-aud')">✖</button>
+            </div>
             <div class="input-row">
                 <div style="position:relative; width:100%; height:100%; display:flex; align-items:center;">
                     <input type="file" id="f-aud" accept="audio/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;">
@@ -130,7 +138,10 @@
         </div>
         <div class="card">
             <label id="l-il">IMAGE</label>
-            <div class="input-row"><input type="text" id="u-img" oninput="setI(this.value)"><button class="x-btn" onclick="clearF('u-img')">✖</button></div>
+            <div class="input-row">
+                <input type="text" id="u-img" oninput="setI(this.value)">
+                <button class="x-btn" onclick="clearF('u-img')">✖</button>
+            </div>
             <div class="input-row">
                 <div style="position:relative; width:100%; height:100%; display:flex; align-items:center;">
                     <input type="file" id="f-img" accept="image/*" onchange="updateFileName(this)" style="position:absolute; opacity:0; width:100%; cursor:pointer;">
@@ -147,10 +158,7 @@
     const langs = {
         de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Wählen", link: "Link" },
         ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", select: "Выбрать", link: "Ссылка" },
-        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose", link: "Link" },
-        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir", link: "Lien" },
-        ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "選択", link: "リンク" },
-        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", link: "Link" }
+        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose", link: "Link" }
     };
 
     const sel = document.getElementById('langSelect');
@@ -159,10 +167,14 @@
 
     function translateUI() {
         const t = langs[sel.value];
-        ['lang','mode','slow','materials','al','il'].forEach(id => document.getElementById('l-'+id).innerText = t[id]);
+        ['lang','mode','slow','materials','al','il'].forEach(id => {
+            const el = document.getElementById('l-'+id);
+            if(el) el.innerText = t[id];
+        });
         ['study','master','test'].forEach(m => document.getElementById('opt-'+m).innerText = t[m]);
         document.getElementById('u-aud').placeholder = t.link;
         document.getElementById('u-img').placeholder = t.link;
+        
         ['f-univ-btn', 'f-aud-btn', 'f-img-btn'].forEach(id => {
             const el = document.getElementById(id);
             if (!el.hasAttribute('data-active')) el.innerText = "📁 " + t.select;
@@ -175,6 +187,9 @@
             btn.innerText = "📄 " + input.files[0].name;
             btn.setAttribute('data-active', 'true');
             btn.style.color = "#d4af37";
+            const url = URL.createObjectURL(input.files[0]);
+            if(input.id === 'f-aud') audio.src = url;
+            if(input.id === 'f-img') setI(url);
         }
     }
 
@@ -186,6 +201,8 @@
             btn.innerText = "📁 " + langs[sel.value].select;
             btn.style.color = "#78a1c4";
         }
+        if(id.includes('aud')) { audio.pause(); audio.src = ''; }
+        if(id.includes('img')) setI('');
     }
 
     function togglePlay() { if(audio.src) audio.paused ? audio.play() : audio.pause(); }
