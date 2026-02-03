@@ -49,7 +49,7 @@
         
         input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 0.9rem; font-weight: 700; color: var(--text-main); cursor: pointer; }
         
-        /* СКРЫВАЕМ СТАНДАРТНЫЙ INPUT FILE */
+        /* Скрытый input и кастомная метка */
         .hidden-file { position: absolute; width: 100%; height: 100%; left: 0; top: 0; opacity: 0; cursor: pointer; z-index: 2; }
         .custom-file-label { font-size: 0.85rem; font-weight: 800; color: #78a1c4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; pointer-events: none; }
 
@@ -78,7 +78,7 @@
     <div class="card">
         <label id="l-materials">MATERIALS</label>
         <div class="input-row">
-            <span class="custom-file-label" id="f-univ-btn">📁 Wählen</span>
+            <span class="custom-file-label" id="f-univ-btn"></span>
             <input type="file" id="f-univ" class="hidden-file" onchange="handleFile(this)">
             <button class="x-btn" onclick="clearF('f-univ')">✖</button>
         </div>
@@ -90,7 +90,7 @@
 </div>
 
 <div class="player-zone">
-    <div id="lock-screen"><h1 style="color:red; font-size:3rem;">TIME IS UP</h1></div>
+    <div id="lock-screen"><h1 id="l-lock-msg" style="color:red; font-size:3rem;">TIME IS UP</h1></div>
     <div class="cover" id="cover"><span class="gold-icon">♫</span></div>
     <input type="range" id="prog" value="0" step="0.1" oninput="manualSeek(this.value)">
     <div class="time" id="time-display">00:00 / 00:00</div>
@@ -103,7 +103,7 @@
         <div class="card"><label id="l-al">AUDIO</label>
             <div class="input-row"><input type="text" id="u-aud" oninput="audio.src=this.value"><button class="x-btn" onclick="clearF('u-aud')">✖</button></div>
             <div class="input-row">
-                <span class="custom-file-label" id="f-aud-btn">📁 Wählen</span>
+                <span class="custom-file-label" id="f-aud-btn"></span>
                 <input type="file" id="f-aud" class="hidden-file" accept="audio/*" onchange="handleFile(this)">
                 <button class="x-btn" onclick="clearF('f-aud')">✖</button>
             </div>
@@ -111,7 +111,7 @@
         <div class="card"><label id="l-il">IMAGE</label>
             <div class="input-row"><input type="text" id="u-img" oninput="setI(this.value)"><button class="x-btn" onclick="clearF('u-img')">✖</button></div>
             <div class="input-row">
-                <span class="custom-file-label" id="f-img-btn">📁 Wählen</span>
+                <span class="custom-file-label" id="f-img-btn"></span>
                 <input type="file" id="f-img" class="hidden-file" accept="image/*" onchange="handleFile(this)">
                 <button class="x-btn" onclick="clearF('f-img')">✖</button>
             </div>
@@ -122,20 +122,22 @@
 <script>
     const audio = new Audio();
     let listenCount = 0;
+    
+    // Переводы для всех элементов, включая статус выбора файла
     const langs = {
-        ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", select: "Выбрать", link: "Ссылка", dict: "URL Словаря" },
-        de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Wählen", link: "Link", dict: "Wörterbuch URL" },
-        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose", link: "Link", dict: "Dictionary URL" },
-        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir", link: "Lien", dict: "URL Dictionnaire" },
-        it: { name: "Italiano", lang: "LINGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALI", al: "AUDIO", il: "IMMAGINE", study: "Studio", master: "Master", test: "Test", select: "Scegli", link: "Link", dict: "URL Dizionario" },
-        es: { name: "Español", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALES", al: "AUDIO", il: "IMAGEN", study: "Estudio", master: "Maestro", test: "Prueba", select: "Elegir", link: "Enlace", dict: "URL Diccionario" },
-        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher", link: "Link", dict: "Dicionário URL" },
-        ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "選択", link: "リンク", dict: "辞書URL" },
-        zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "大师", test: "测试", select: "选择", link: "链接", dict: "字典URL" },
-        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोд", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छवि", study: "अध्ययन", master: "माстер", test: "परीक्षा", select: "चुनें", link: "लिंक", dict: "शब्दकोش URL" },
-        ar: { name: "العربية", lang: "اللغة", mode: "الوضع", slow: "بطيء 0.8x", materials: "المواد", al: "صوت", il: "صورة", study: "دراسة", master: "ماستر", test: "اختبار", select: "اختر", link: "رابط", dict: "رابط القاموس" },
-        fa: { name: "فارسی", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", link: "لینک", dict: "لینک دیکشنری" },
-        da: { name: "دری", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب", link: "لینک", dict: "لینک دیکشنری" }
+        ru: { name: "Русский", lang: "ЯЗЫК", mode: "РЕЖИМ", slow: "ЗАМЕДЛЕНИЕ 0.8x", materials: "МАТЕРИАЛЫ", al: "АУДИО", il: "ФОТО", study: "Ученик", master: "Мастер", test: "Тест", select: "Выберите файл", nofile: "Файл не выбран", link: "Ссылка", dict: "URL Словаря", timeup: "ВРЕМЯ ВЫШЛО" },
+        de: { name: "Deutsch", lang: "SPRACHE", mode: "MODUS", slow: "LANGSAM 0.8x", materials: "MATERIALIEN", al: "AUDIO", il: "BILD", study: "Lernen", master: "Master", test: "Test", select: "Datei wählen", nofile: "Keine Datei gewählt", link: "Link", dict: "Wörterbuch URL", timeup: "ZEIT ОБ" },
+        en: { name: "English", lang: "LANGUAGE", mode: "MODE", slow: "SLOW 0.8x", materials: "MATERIALS", al: "AUDIO", il: "IMAGE", study: "Study", master: "Master", test: "Test", select: "Choose file", nofile: "No file chosen", link: "Link", dict: "Dictionary URL", timeup: "TIME IS UP" },
+        fr: { name: "Français", lang: "LANGUE", mode: "MODE", slow: "LENT 0.8x", materials: "MATÉRIELS", al: "AUDIO", il: "IMAGE", study: "Étude", master: "Maître", test: "Test", select: "Choisir un fichier", nofile: "Aucun fichier choisi", link: "Lien", dict: "URL Dictionnaire", timeup: "TEMPS ÉCOULÉ" },
+        it: { name: "Italiano", lang: "LINGUA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALI", al: "AUDIO", il: "IMMAGINE", study: "Studio", master: "Master", test: "Test", select: "Scegli file", nofile: "Nessun file scelto", link: "Link", dict: "URL Dizionario", timeup: "TEMPO SCADUTO" },
+        es: { name: "Español", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIALES", al: "AUDIO", il: "IMAGEN", study: "Estudio", master: "Maestro", test: "Prueba", select: "Elegir archivo", nofile: "Archivo no elegido", link: "Enlace", dict: "URL Diccionario", timeup: "TIEMPO AGOTADO" },
+        pt: { name: "Português", lang: "IDIOMA", mode: "MODO", slow: "LENTO 0.8x", materials: "MATERIAIS", al: "ÁUDIO", il: "IMAGEM", study: "Estudo", master: "Mestre", test: "Teste", select: "Escolher arquivo", nofile: "Nenhum arquivo", link: "Link", dict: "Dicionário URL", timeup: "TEMPO ESGOTADO" },
+        ja: { name: "日本語", lang: "言語", mode: "モード", slow: "スロー 0.8x", materials: "教材", al: "オーディオ", il: "画像", study: "学習", master: "マスター", test: "テスト", select: "ファイルを選択", nofile: "選択されていません", link: "リンク", dict: "辞書URL", timeup: "時間切れ" },
+        zh: { name: "中文", lang: "语言", mode: "模式", slow: "慢放 0.8x", materials: "材料", al: "音频", il: "图片", study: "学习", master: "大师", test: "测试", select: "选择文件", nofile: "未选择文件", link: "链接", dict: "字典URL", timeup: "时间到" },
+        hi: { name: "हिन्दी", lang: "भाषा", mode: "मोड", slow: "धीमी गति 0.8x", materials: "सामग्री", al: "ऑडियो", il: "छви", study: "अध्ययन", master: "मास्टर", test: "परीक्षा", select: "फ़ाइल चुनें", nofile: "कोई फ़ाइल नहीं", link: "लिंक", dict: "शब्दकोश URL", timeup: "समय समाप्त" },
+        ar: { name: "العربية", lang: "اللغة", mode: "الوضع", slow: "بطيء 0.8x", materials: "المواد", al: "صوت", il: "صورة", study: "دراسة", master: "ماستر", test: "اختبار", select: "اختر ملف", nofile: "لم يتم اختيار ملف", link: "رابط", dict: "رابط القاموس", timeup: "انتهى الوقت" },
+        fa: { name: "فارسی", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب فایل", nofile: "فایلی انتخاب نشده", link: "لینک", dict: "لینک دیکشنری", timeup: "زمان تمام شد" },
+        da: { name: "دری", lang: "زبان", mode: "حالت", slow: "آهسته 0.8x", materials: "مواد", al: "صوتی", il: "تصویر", study: "مطالعه", master: "استاد", test: "تست", select: "انتخاب فایل", nofile: "فایلی انتخاب نشده", link: "لینک", dict: "لینک دیکشنری", timeup: "زمان تمام شد" }
     };
 
     const sel = document.getElementById('langSelect');
@@ -149,10 +151,17 @@
         document.getElementById('u-aud').placeholder = t.link;
         document.getElementById('u-img').placeholder = t.link;
         document.getElementById('u-dict').placeholder = t.dict;
+        document.getElementById('l-lock-msg').innerText = t.timeup;
         
-        ['f-univ-btn', 'f-aud-btn', 'f-img-btn'].forEach(id => {
-            const el = document.getElementById(id);
-            if (!el.hasAttribute('data-active')) el.innerText = "📁 " + t.select;
+        // Обновляем состояние кнопок файлов
+        ['f-univ', 'f-aud', 'f-img'].forEach(id => {
+            const label = document.getElementById(id + '-btn');
+            const input = document.getElementById(id);
+            if (input.files.length > 0) {
+                label.innerText = "📄 " + input.files[0].name;
+            } else {
+                label.innerText = "📁 " + t.nofile + " / " + t.select;
+            }
         });
     }
 
@@ -160,7 +169,6 @@
         const label = document.getElementById(input.id + '-btn');
         if (input.files.length > 0) {
             label.innerText = "📄 " + input.files[0].name;
-            label.setAttribute('data-active', 'true');
             label.style.color = "#d4af37";
             const url = URL.createObjectURL(input.files[0]);
             if(input.id === 'f-aud') audio.src = url;
@@ -171,10 +179,9 @@
     function clearF(id) {
         const input = document.getElementById(id);
         input.value = '';
-        if(id.startsWith('f-')) {
-            const label = document.getElementById(id + '-btn');
-            label.removeAttribute('data-active');
-            label.innerText = "📁 " + langs[sel.value].select;
+        const label = document.getElementById(id + '-btn');
+        if(label) {
+            label.innerText = "📁 " + langs[sel.value].nofile + " / " + langs[sel.value].select;
             label.style.color = "#78a1c4";
         }
         if(id.includes('aud')) { audio.pause(); audio.src = ''; }
@@ -196,6 +203,7 @@
     audio.onpause = () => document.getElementById('play-btn').innerText = '▶';
     
     translateUI();
+    applyModeRules(); // Инициализация правил
 </script>
 </body>
 </html>
