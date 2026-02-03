@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Studio EDU Pro</title>
+    <title>Audio Studio EDU Global</title>
     <style>
         :root {
             --primary-color: #6c5ce7;
@@ -13,7 +13,6 @@
             --text-main: #333;
         }
 
-        /* Темная тема */
         body.dark-mode {
             --bg-gradient: linear-gradient(135deg, #2d3436 0%, #000000 100%);
             --panel-bg: #1e1e1e;
@@ -22,7 +21,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
             display: flex;
@@ -49,8 +48,8 @@
 
         h2 { font-size: 1.2rem; margin-top: 0; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
 
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; font-weight: 600; }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 4px; font-weight: 600; }
         
         select, input[type="file"], input[type="text"] {
             width: 100%;
@@ -66,7 +65,7 @@
         .btn {
             width: 100%;
             padding: 12px;
-            margin-top: 10px;
+            margin-top: 8px;
             border: none;
             border-radius: 10px;
             background: var(--primary-color);
@@ -77,11 +76,10 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: 0.2s ease;
+            transition: 0.2s;
         }
 
         .btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
         .btn.recording { background: #ff4757; animation: pulse 1.5s infinite; }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
@@ -90,7 +88,7 @@
         
         .cover-art {
             width: 100%;
-            height: 250px;
+            height: 240px;
             background: #eee url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=500&auto=format') center/cover;
             border-radius: 15px;
             margin-bottom: 15px;
@@ -100,31 +98,30 @@
 
         canvas {
             width: 100%;
-            height: 70px;
+            height: 60px;
             background: var(--accent-bg);
             border-radius: 10px;
             margin-bottom: 15px;
         }
 
-        .controls { display: flex; gap: 20px; margin-bottom: 15px; }
+        .controls { display: flex; gap: 15px; margin-bottom: 15px; }
         .control-btn {
             background: var(--primary-color);
             color: white;
             border: none;
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.4);
         }
 
         .progress-box { width: 100%; text-align: center; }
         input[type="range"] { width: 100%; accent-color: var(--primary-color); cursor: pointer; }
-        .time-display { font-size: 0.9rem; color: var(--text-main); margin-bottom: 5px; font-family: 'Courier New', monospace; }
+        .time-display { font-size: 0.85rem; color: var(--text-main); margin-bottom: 5px; font-family: monospace; }
 
         .download-link {
             text-align: center;
@@ -133,7 +130,7 @@
             font-size: 0.85rem;
             font-weight: bold;
             display: none;
-            padding: 10px;
+            padding: 8px;
             border: 2px dashed var(--primary-color);
             border-radius: 10px;
             margin-top: 10px;
@@ -153,7 +150,22 @@
             <select id="langSelect">
                 <option value="ru">Русский</option>
                 <option value="en">English</option>
-                <option value="zh">中文</option>
+                <option value="zh">中文 (Китайский)</option>
+                <option value="es">Español (Испанский)</option>
+                <option value="de">Deutsch (Немецкий)</option>
+                <option value="hi">हिन्दी (Хинди)</option>
+                <option value="ar">العربية (Арабский)</option>
+                <option value="fa">فارسی (Фарси)</option>
+                <option value="pt">Português (Португальский)</option>
+                <option value="ja">日本語 (Японский)</option>
+                <option value="pa">ਪੰਜਾਬੀ (Панджаби)</option>
+                <option value="bn">বাংলা (Бенгальский)</option>
+                <option value="fr">Français (Французский)</option>
+                <option value="th">ไทย (Тайский)</option>
+                <option value="tr">Türkçe (Турецкий)</option>
+                <option value="ko">한국어 (Корейский)</option>
+                <option value="el">Ελληνικά (Греческий)</option>
+                <option value="prs">دری (Дари)</option>
             </select>
         </div>
 
@@ -166,7 +178,7 @@
             <label id="lbl-cover-url">🔗 Обложка (Ссылка из интернета)</label>
             <div style="display:flex; gap:5px;">
                 <input type="text" id="coverUrl" placeholder="https://...">
-                <button class="btn" id="applyCoverUrl" style="margin:0; width:60px;">OK</button>
+                <button class="btn" id="applyCoverUrl" style="margin:0; width:50px;">OK</button>
             </div>
         </div>
 
@@ -177,7 +189,7 @@
 
         <button class="btn" id="recordBtn"><span id="btn-rec-text">🎤 Начать запись голоса</span></button>
         
-        <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
+        <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
             <a id="downloadLink" class="download-link" download="my_audio.webm">⬇️ Скачать результат</a>
             <button class="btn" id="iframeBtn" style="background: #a29bfe;"><span id="btn-iframe-text">📦 Скопировать код iframe</span></button>
             <button class="btn" id="themeBtn" style="background: #444;"><span id="btn-theme-text">🌓 Переключить тему</span></button>
@@ -199,31 +211,31 @@
             <button class="control-btn" id="forwardBtn">⏩</button>
         </div>
 
-        <button class="btn" style="background: #8e8e93; margin-top: 15px;"><span id="btn-playlist-text">📂 Показать плейлист</span></button>
+        <button class="btn" style="background: #8e8e93; margin-top: 10px;"><span id="btn-playlist-text">📂 Показать плейлист</span></button>
         <audio id="mainAudio" crossorigin="anonymous"></audio>
     </div>
 </div>
 
 <script>
     const translations = {
-        ru: {
-            title: "📱 Audio Studio EDU", lblLang: "🌐 Выбор языка", lblCoverFile: "🖼️ Обложка (Загрузить файл)",
-            lblCoverUrl: "🔗 Обложка (Ссылка из интернета)", lblAudio: "🎵 Аудиофайл", btnRecStart: "🎤 Начать запись голоса",
-            btnRecStop: "⏹ Остановить запись", btnIframe: "📦 Скопировать код iframe", btnTheme: "🌓 Переключить тему",
-            btnPlaylist: "📂 Показать плейлист", download: "⬇️ Скачать аудиозапись", copyAlert: "Код скопирован!"
-        },
-        en: {
-            title: "📱 Audio Studio EDU", lblLang: "🌐 Select Language", lblCoverFile: "🖼️ Cover (Upload File)",
-            lblCoverUrl: "🔗 Cover (Web Link)", lblAudio: "🎵 Audio File", btnRecStart: "🎤 Start Recording",
-            btnRecStop: "⏹ Stop Recording", btnIframe: "📦 Copy iframe Code", btnTheme: "🌓 Toggle Theme",
-            btnPlaylist: "📂 Show Playlist", download: "⬇️ Download Audio", copyAlert: "Code copied!"
-        },
-        zh: {
-            title: "📱 音频工作室 EDU", lblLang: "🌐 选择语言", lblCoverFile: "🖼️ 封面 (上传文件)",
-            lblCoverUrl: "🔗 封面 (网页链接)", lblAudio: "🎵 音频文件", btnRecStart: "🎤 开始录音",
-            btnRecStop: "⏹ 停止录音", btnIframe: "📦 复制 iframe 代码", btnTheme: "🌓 切换主题",
-            btnPlaylist: "📂 显示播放列表", download: "⬇️ 下载录音", copyAlert: "代码已复制!"
-        }
+        ru: { title: "📱 Audio Studio EDU", lblLang: "🌐 Выбор языка", lblCoverFile: "🖼️ Обложка (Загрузить файл)", lblCoverUrl: "🔗 Обложка (Ссылка из интернета)", lblAudio: "🎵 Аудиофайл", btnRecStart: "🎤 Начать запись голоса", btnRecStop: "⏹ Остановить запись", btnIframe: "📦 Скопировать код iframe", btnTheme: "🌓 Переключить тему", btnPlaylist: "📂 Показать плейлист", download: "⬇️ Скачать аудиозапись", copyAlert: "Код скопирован!" },
+        en: { title: "📱 Audio Studio EDU", lblLang: "🌐 Select Language", lblCoverFile: "🖼️ Cover (Upload)", lblCoverUrl: "🔗 Cover (Web Link)", lblAudio: "🎵 Audio File", btnRecStart: "🎤 Start Recording", btnRecStop: "⏹ Stop Recording", btnIframe: "📦 Copy iframe Code", btnTheme: "🌓 Toggle Theme", btnPlaylist: "📂 Show Playlist", download: "⬇️ Download Audio", copyAlert: "Code copied!" },
+        zh: { title: "📱 音频工作室 EDU", lblLang: "🌐 选择语言", lblCoverFile: "🖼️ 封面 (上传文件)", lblCoverUrl: "🔗 封面 (网页链接)", lblAudio: "🎵 音频文件", btnRecStart: "🎤 开始录音", btnRecStop: "⏹ 停止录音", btnIframe: "📦 复制 iframe 代码", btnTheme: "🌓 切换主题", btnPlaylist: "📂 显示播放列表", download: "⬇️ 下载录音", copyAlert: "代码已复制!" },
+        es: { title: "📱 Audio Studio EDU", lblLang: "🌐 Seleccionar Idioma", lblCoverFile: "🖼️ Portada (Subir)", lblCoverUrl: "🔗 Portada (Enlace)", lblAudio: "🎵 Archivo de Audio", btnRecStart: "🎤 Iniciar Grabación", btnRecStop: "⏹ Detener Grabación", btnIframe: "📦 Copiar iframe", btnTheme: "🌓 Cambiar Tema", btnPlaylist: "📂 Mostrar Lista", download: "⬇️ Descargar Audio", copyAlert: "¡Código copiado!" },
+        de: { title: "📱 Audio Studio EDU", lblLang: "🌐 Sprache Wählen", lblCoverFile: "🖼️ Cover (Hochladen)", lblCoverUrl: "🔗 Cover (Web-Link)", lblAudio: "🎵 Audiodatei", btnRecStart: "🎤 Aufnahme Starten", btnRecStop: "⏹ Aufnahme Stoppen", btnIframe: "📦 iframe-Code Kopieren", btnTheme: "🌓 Design Umschalten", btnPlaylist: "📂 Playlist Anzeigen", download: "⬇️ Audio Herunterladen", copyAlert: "Code kopiert!" },
+        hi: { title: "📱 ऑडियो स्टूडियो EDU", lblLang: "🌐 भाषा चुनें", lblCoverFile: "🖼️ कवर (अपलोड)", lblCoverUrl: "🔗 कवर (वेब लिंक)", lblAudio: "🎵 ऑडियो फ़ाइल", btnRecStart: "🎤 रिकॉर्डिंग शुरू करें", btnRecStop: "⏹ रिकॉर्डिंग बंद करें", btnIframe: "📦 iframe कोड कॉपी करें", btnTheme: "🌓 थीम बदलें", btnPlaylist: "📂 प्लेलिस्ट दिखाएं", download: "⬇️ ऑडियो डाउनलोड करें", copyAlert: "कोड कॉपी किया गया!" },
+        ar: { title: "📱 استوديو الصوت EDU", lblLang: "🌐 اختر اللغة", lblCoverFile: "🖼️ غلاف (تحميل)", lblCoverUrl: "🔗 غلاف (رابط)", lblAudio: "🎵 ملف صوتي", btnRecStart: "🎤 بدء التسجيل", btnRecStop: "⏹ إيقاف التسجيل", btnIframe: "📦 نسخ كود iframe", btnTheme: "🌓 تبديل المظهر", btnPlaylist: "📂 عرض قائمة التشغيل", download: "⬇️ تحميل الصوت", copyAlert: "تم نسخ الكود!" },
+        fa: { title: "📱 استودیو صوتی EDU", lblLang: "🌐 انتخاب زبان", lblCoverFile: "🖼️ کاور (آپلود)", lblCoverUrl: "🔗 کاور (لینک وب)", lblAudio: "🎵 فایل صوتی", btnRecStart: "🎤 شروع ضبط", btnRecStop: "⏹ توقف ضبط", btnIframe: "📦 کپی کد iframe", btnTheme: "🌓 تغییر تم", btnPlaylist: "📂 نمایش لیست پخش", download: "⬇️ دانلود فایل", copyAlert: "کد کپی شد!" },
+        pt: { title: "📱 Audio Studio EDU", lblLang: "🌐 Escolher Idioma", lblCoverFile: "🖼️ Capa (Carregar)", lblCoverUrl: "🔗 Capa (Link)", lblAudio: "🎵 Arquivo de Áudio", btnRecStart: "🎤 Iniciar Gravação", btnRecStop: "⏹ Parar Gravação", btnIframe: "📦 Copiar iframe", btnTheme: "🌓 Alternar Tema", btnPlaylist: "📂 Mostrar Playlist", download: "⬇️ Baixar Áudio", copyAlert: "Código copiado!" },
+        ja: { title: "📱 オーディオスタジオ EDU", lblLang: "🌐 言語選択", lblCoverFile: "🖼️ カバー（アップロード）", lblCoverUrl: "🔗 カバー（リンク）", lblAudio: "🎵 オーディオファイル", btnRecStart: "🎤 録音開始", btnRecStop: "⏹ 録音停止", btnIframe: "📦 iframeコードをコピー", btnTheme: "🌓 テーマ切り替え", btnPlaylist: "📂 プレイリストを表示", download: "⬇️ オーディオをダウンロード", copyAlert: "コピーしました！" },
+        pa: { title: "📱 ਆਡੀਓ ਸਟੂਡੀਓ EDU", lblLang: "🌐 ਭਾਸ਼ਾ ਚੁਣੋ", lblCoverFile: "🖼️ ਕਵਰ (ਅੱਪਲੋਡ)", lblCoverUrl: "🔗 ਕਵਰ (ਲਿੰਕ)", lblAudio: "🎵 ਆਡੀਓ ਫਾਈਲ", btnRecStart: "🎤 ਰਿਕਾਰਡਿੰਗ ਸ਼ੁਰੂ ਕਰੋ", btnRecStop: "⏹ ਰਿਕਾਰਡਿੰਗ ਰੋਕੋ", btnIframe: "📦 iframe ਕੋਡ ਕਾਪੀ ਕਰੋ", btnTheme: "🌓 ਥੀਮ ਬਦਲੋ", btnPlaylist: "📂 ਪਲੇਲਿਸਟ ਦਿਖਾਓ", download: "⬇️ ਆਡੀਓ ਡਾਊਨਲੋਡ ਕਰੋ", copyAlert: "ਕੋਡ ਕਾਪੀ ਹੋ ਗਿਆ!" },
+        bn: { title: "📱 অডিও স্টুডিও EDU", lblLang: "🌐 ভাষা নির্বাচন", lblCoverFile: "🖼️ কভার (আপলোড)", lblCoverUrl: "🔗 কভার (লিঙ্ক)", lblAudio: "🎵 অডিও ফাইল", btnRecStart: "🎤 রেকর্ডিং শুরু করুন", btnRecStop: "⏹ রেকর্ডিং বন্ধ করুন", btnIframe: "📦 iframe কোড কপি করুন", btnTheme: "🌓 থিম পরিবর্তন", btnPlaylist: "📂 প্লেলিস্ট দেখুন", download: "⬇️ অডিও ডাউনলোড", copyAlert: "কোড কপি করা হয়েছে!" },
+        fr: { title: "📱 Studio Audio EDU", lblLang: "🌐 Choisir la Langue", lblCoverFile: "🖼️ Couverture (Charger)", lblCoverUrl: "🔗 Couverture (Lien)", lblAudio: "🎵 Fichier Audio", btnRecStart: "🎤 Démarrer l'enregistrement", btnRecStop: "⏹ Arrêter l'enregistrement", btnIframe: "📦 Copier le code iframe", btnTheme: "🌓 Changer de Thème", btnPlaylist: "📂 Afficher la Playlist", download: "⬇️ Télécharger l'Audio", copyAlert: "Code copié !" },
+        th: { title: "📱 สตูดิโอเสียง EDU", lblLang: "🌐 เลือกภาษา", lblCoverFile: "🖼️ ปก (อัปโหลด)", lblCoverUrl: "🔗 ปก (ลิงก์)", lblAudio: "🎵 ไฟล์เสียง", btnRecStart: "🎤 เริ่มบันทึกเสียง", btnRecStop: "⏹ หยุดบันทึก", btnIframe: "📦 คัดลอกรหัส iframe", btnTheme: "🌓 เปลี่ยนธีม", btnPlaylist: "📂 แสดงเพลย์ลิสต์", download: "⬇️ ดาวน์โหลดเสียง", copyAlert: "คัดลอกรหัสแล้ว!" },
+        tr: { title: "📱 Ses Stüdyosu EDU", lblLang: "🌐 Dil Seçin", lblCoverFile: "🖼️ Kapak (Yükle)", lblCoverUrl: "🔗 Kapak (Bağlantı)", lblAudio: "🎵 Ses Dosyası", btnRecStart: "🎤 Kaydı Başlat", btnRecStop: "⏹ Kaydı Durdur", btnIframe: "📦 iframe Kodunu Kopyala", btnTheme: "🌓 Temayı Değiştir", btnPlaylist: "📂 Oynatma Listesi", download: "⬇️ Sesi İndir", copyAlert: "Kod kopyalandı!" },
+        ko: { title: "📱 오디오 스튜디오 EDU", lblLang: "🌐 언어 선택", lblCoverFile: "🖼️ 커버 (업로드)", lblCoverUrl: "🔗 커버 (링크)", lblAudio: "🎵 오디오 파일", btnRecStart: "🎤 녹음 시작", btnRecStop: "⏹ 녹음 중지", btnIframe: "📦 iframe 코드 복사", btnTheme: "🌓 테마 변경", btnPlaylist: "📂 재생 목록 보기", download: "⬇️ 오디오 다운로드", copyAlert: "코드가 복사되었습니다!" },
+        el: { title: "📱 Studio Ήχου EDU", lblLang: "🌐 Επιλογή Γλώσσας", lblCoverFile: "🖼️ Εξώφυλλο (Μεταφόρτωση)", lblCoverUrl: "🔗 Εξώφυλλο (Σύνδεσμος)", lblAudio: "🎵 Αρχείο Ήχου", btnRecStart: "🎤 Έναρξη Ηχογράφησης", btnRecStop: "⏹ Διακοπή Ηχογράφησης", btnIframe: "📦 Αντιγραφή κώδικα iframe", btnTheme: "🌓 Εναλλαγή Θέματος", btnPlaylist: "📂 Εμφάνιση Playlist", download: "⬇️ Λήψη Ήχου", copyAlert: "Ο κώδικας αντιγράφηκε!" },
+        prs: { title: "📱 استودیو صوتی EDU", lblLang: "🌐 انتخاب زبان", lblCoverFile: "🖼️ کاور (آپلود)", lblCoverUrl: "🔗 کاور (لینک)", lblAudio: "🎵 فایل صوتی", btnRecStart: "🎤 شروع ضبط", btnRecStop: "⏹ توقف ضبط", btnIframe: "📦 کپی کد iframe", btnTheme: "🌓 تغییر تم", btnPlaylist: "📂 نمایش لیست پخش", download: "⬇️ دانلود صوت", copyAlert: "کد کپی شد!" }
     };
 
     const audio = document.getElementById('mainAudio');
@@ -236,9 +248,8 @@
     let audioContext, analyser, source;
     let mediaRecorder, audioChunks = [];
 
-    // --- ЛОКАЛИЗАЦИЯ ---
     function updateLanguage() {
-        const t = translations[langSelect.value];
+        const t = translations[langSelect.value] || translations.en;
         document.getElementById('ui-title').innerText = t.title;
         document.getElementById('lbl-lang').innerText = t.lblLang;
         document.getElementById('lbl-cover-file').innerText = t.lblCoverFile;
@@ -252,25 +263,23 @@
     }
     langSelect.onchange = updateLanguage;
 
-    // --- ИНИЦИАЛИЗАЦИЯ АУДИО (ВАЖНО ДЛЯ ВОСПРОИЗВЕДЕНИЯ) ---
-    function resumeAudioContext() {
+    function initAudio() {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioContext.createAnalyser();
             source = audioContext.createMediaElementSource(audio);
             source.connect(analyser);
             analyser.connect(audioContext.destination);
-            drawVisualizer();
+            draw();
         }
         if (audioContext.state === 'suspended') audioContext.resume();
     }
 
-    // --- ПЛЕЕР ---
     playBtn.onclick = () => {
         if (!audio.src) return;
-        resumeAudioContext();
+        initAudio();
         if (audio.paused) {
-            audio.play().then(() => playBtn.innerText = '⏸').catch(e => console.error("Ошибка воспроизведения:", e));
+            audio.play().then(() => playBtn.innerText = '⏸');
         } else {
             audio.pause();
             playBtn.innerText = '▶';
@@ -281,39 +290,34 @@
         const file = e.target.files[0];
         if (file) {
             audio.src = URL.createObjectURL(file);
-            audio.load(); // Обязательно для некоторых браузеров
+            audio.load();
             document.getElementById('downloadLink').style.display = "block";
             document.getElementById('downloadLink').href = audio.src;
         }
     };
 
-    // --- ОБЛОЖКА ---
     document.getElementById('coverUpload').onchange = (e) => {
         if (e.target.files[0]) document.getElementById('coverArt').style.backgroundImage = `url(${URL.createObjectURL(e.target.files[0])})`;
     };
+
     document.getElementById('applyCoverUrl').onclick = () => {
         const url = document.getElementById('coverUrl').value;
         if (url) document.getElementById('coverArt').style.backgroundImage = `url('${url}')`;
     };
 
-    // --- ТЕМА ---
     document.getElementById('themeBtn').onclick = () => document.body.classList.toggle('dark-mode');
 
-    // --- ВИЗУАЛИЗАТОР ---
-    function drawVisualizer() {
-        requestAnimationFrame(drawVisualizer);
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        analyser.getByteFrequencyData(dataArray);
+    function draw() {
+        requestAnimationFrame(draw);
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#6c5ce7';
         for (let i = 0; i < 80; i++) {
-            const barHeight = dataArray[i] / 4;
-            ctx.fillRect(i * 4, canvas.height - barHeight, 3, barHeight);
+            ctx.fillRect(i * 4, canvas.height, 3, -(data[i] / 4));
         }
     }
 
-    // --- ЗАПИСЬ ---
     recordBtn.onclick = async () => {
         if (mediaRecorder && mediaRecorder.state === "recording") {
             mediaRecorder.stop();
@@ -334,16 +338,15 @@
                 mediaRecorder.start();
                 recordBtn.classList.add('recording');
                 updateLanguage();
-            } catch (err) { alert("Микрофон недоступен!"); }
+            } catch (err) { alert("Microphone Error!"); }
         }
     };
 
-    // Таймер и прогресс
     audio.ontimeupdate = () => {
         document.getElementById('progressBar').max = audio.duration || 0;
         document.getElementById('progressBar').value = audio.currentTime;
-        const format = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('timeDisplay').innerText = `${format(audio.currentTime)} / ${format(audio.duration || 0)}`;
+        const fmt = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('timeDisplay').innerText = `${fmt(audio.currentTime)} / ${fmt(audio.duration || 0)}`;
     };
     document.getElementById('progressBar').oninput = (e) => audio.currentTime = e.target.value;
     document.getElementById('rewindBtn').onclick = () => audio.currentTime -= 10;
