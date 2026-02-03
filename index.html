@@ -36,4 +36,249 @@ body{
   100%{background-position:0% 50%}
 }
 
-/* 🧩 ПА*
+/* 🧩 ПАНЕЛЬ */
+.player{
+  width:360px;
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+
+/* 🧠 HEADER */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+}
+
+.header h1{
+  font-size:15px;
+  margin:0;
+}
+
+select{
+  font-size:12px;
+  border-radius:6px;
+  padding:2px 4px;
+}
+
+/* 🖼 ОБЛОЖКА */
+.cover{
+  margin-top:10px;
+  height:140px;
+  border-radius:12px;
+  background:linear-gradient(135deg,#e6ecfb,#f7f9ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  color:#666;
+}
+
+/* 🎵 AUDIO */
+audio{
+  width:100%;
+  margin-top:10px;
+}
+
+/* ⏱ ВРЕМЯ */
+.time{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  margin-top:4px;
+}
+
+/* 🎛 КНОПКИ */
+.controls{
+  display:flex;
+  gap:6px;
+  margin-top:10px;
+  flex-wrap:wrap;
+}
+
+button{
+  flex:1;
+  border:none;
+  border-radius:8px;
+  padding:6px;
+  font-size:12px;
+  cursor:pointer;
+  background:var(--accent);
+  color:white;
+}
+
+button.secondary{
+  background:var(--accent-soft);
+  color:var(--text);
+}
+
+/* 🔁 ПЕРЕМОТКА */
+.seek{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.seek button{
+  font-size:11px;
+}
+
+/* 📂 ПЛЕЙЛИСТ */
+.playlist{
+  margin-top:10px;
+  font-size:12px;
+}
+
+.playlist div{
+  padding:4px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.playlist div:hover{
+  background:#eef3ff;
+}
+
+/* 🧪 РЕЖИМ */
+.mode{
+  margin-top:6px;
+  font-size:11px;
+  color:#555;
+  text-align:right;
+}
+</style>
+</head>
+
+<body>
+
+<div class="player">
+
+  <div class="header">
+    <h1 id="title">Deutsch interaktiv</h1>
+    <select id="langSelect"></select>
+  </div>
+
+  <div class="cover" id="cover">Audio Studio Pro</div>
+
+  <audio id="audio" controls></audio>
+
+  <div class="time">
+    <span id="current">0:00</span>
+    <span id="duration">0:00</span>
+  </div>
+
+  <div class="seek">
+    <button onclick="seek(-10)" class="secondary">⏪ -10s</button>
+    <button onclick="seek(10)" class="secondary">+10s ⏩</button>
+  </div>
+
+  <div class="controls">
+    <input type="file" id="upload" accept="audio/*" hidden>
+    <button onclick="upload.click()">📂 <span data-t="upload">Загрузить</span></button>
+    <button onclick="downloadAudio()" class="secondary">⬇ <span data-t="download">Скачать</span></button>
+  </div>
+
+  <div class="playlist" id="playlist"></div>
+
+  <div class="mode" id="modeLabel">Режим: Преподаватель</div>
+
+</div>
+
+<script>
+/* 🌍 ЯЗЫКИ */
+const translations={
+ru:{upload:"Загрузить",download:"Скачать"},
+en:{upload:"Upload",download:"Download"},
+de:{upload:"Hochladen",download:"Herunterladen"},
+es:{upload:"Subir",download:"Descargar"},
+it:{upload:"Carica",download:"Scarica"},
+fr:{upload:"Téléverser",download:"Télécharger"},
+zh:{upload:"上传",download:"下载"},
+hi:{upload:"अपलोड",download:"डाउनलोड"},
+ar:{upload:"تحميل",download:"تنزيل"},
+fa:{upload:"بارگذاری",download:"دانلود"},
+prs:{upload:"بارگذاری",download:"دانلود"}
+};
+
+const langSelect=document.getElementById("langSelect");
+Object.keys(translations).forEach(l=>{
+  const o=document.createElement("option");
+  o.value=l;o.text=l.toUpperCase();
+  langSelect.appendChild(o);
+});
+
+langSelect.onchange=()=>{
+  document.querySelectorAll("[data-t]").forEach(el=>{
+    el.textContent=translations[langSelect.value][el.dataset.t];
+  });
+};
+langSelect.value="ru";
+langSelect.onchange();
+
+/* 🎵 AUDIO LOGIC */
+const audio=document.getElementById("audio");
+const upload=document.getElementById("upload");
+const playlist=document.getElementById("playlist");
+const current=document.getElementById("current");
+const duration=document.getElementById("duration");
+
+let tracks=[];
+let currentURL=null;
+
+upload.onchange=e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const url=URL.createObjectURL(f);
+  tracks.push({name:f.name,url});
+  play(url);
+  render();
+};
+
+function play(url){
+  currentURL=url;
+  audio.src=url;
+  audio.play().catch(()=>{});
+}
+
+function render(){
+  playlist.innerHTML="";
+  tracks.forEach(t=>{
+    const d=document.createElement("div");
+    d.textContent=t.name;
+    d.onclick=()=>play(t.url);
+    playlist.appendChild(d);
+  });
+}
+
+audio.ontimeupdate=()=>{
+  current.textContent=format(audio.currentTime);
+  duration.textContent=format(audio.duration);
+};
+
+function format(t){
+  if(!t)return"0:00";
+  const m=Math.floor(t/60);
+  const s=Math.floor(t%60).toString().padStart(2,"0");
+  return`${m}:${s}`;
+}
+
+/* 🔁 ПЕРЕМОТКА */
+function seek(sec){
+  audio.currentTime=Math.max(0,Math.min(audio.duration,audio.currentTime+sec));
+}
+
+/* ⬇ СКАЧИВАНИЕ */
+function downloadAudio(){
+  if(!currentURL)return;
+  const a=document.createElement("a");
+  a.href=currentURL;
+  a.download="audio";
+  a.click();
+}
+</script>
+
+</body>
+</html>
