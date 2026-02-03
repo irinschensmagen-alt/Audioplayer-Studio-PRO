@@ -3,226 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deutsch interaktiv – Audio Studio</title>
+<title>Deutsch interaktiv – Audio Studio Pro</title>
 
 <style>
 :root{
-  --bg:#f2f5fb;
+  --bg1:#eef2fb;
+  --bg2:#f7f9fd;
   --panel:#ffffff;
-  --accent:#8faadc;
-  --accent2:#dbe4f5;
-  --text:#2c2c2c;
-  --radius:16px;
-  --shadow:0 10px 28px rgba(0,0,0,.1);
-  font-family:"Segoe UI",system-ui,sans-serif;
+  --accent:#9bb3e6;
+  --accent-soft:#e4ebfa;
+  --text:#2b2b2b;
+  --radius:18px;
+  --shadow:0 12px 30px rgba(0,0,0,.1);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 
+/* 🌈 АНИМИРОВАННЫЙ ФОН «ХАМЕЛЕОН» */
 body{
   margin:0;
   min-height:100vh;
-  background:linear-gradient(120deg,#e9edf7,#f6f8fc);
+  background:linear-gradient(120deg,var(--bg1),var(--bg2),#f1f6ff);
+  background-size:400% 400%;
+  animation:bgMove 18s ease infinite;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-.player{
-  width:360px;
-  background:var(--panel);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:16px;
+@keyframes bgMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.header h2{
-  margin:0;
-  font-size:16px;
-}
-
-audio{
-  width:100%;
-  margin-top:10px;
-}
-
-.time{
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  margin-top:4px;
-}
-
-.buttons{
-  display:flex;
-  gap:8px;
-  margin-top:12px;
-  flex-wrap:wrap;
-}
-
-button{
-  flex:1;
-  padding:6px;
-  border:none;
-  border-radius:8px;
-  background:var(--accent);
-  color:white;
-  font-size:12px;
-  cursor:pointer;
-}
-
-button.secondary{
-  background:var(--accent2);
-  color:var(--text);
-}
-
-button.recording{
-  background:#e07a7a;
-}
-
-.playlist{
-  margin-top:12px;
-  font-size:13px;
-}
-
-.playlist div{
-  padding:4px;
-  cursor:pointer;
-  border-radius:6px;
-}
-
-.playlist div:hover{
-  background:#eef2fa;
-}
-</style>
-</head>
-
-<body>
-
-<div class="player">
-  <div class="header">
-    <h2>Deutsch interaktiv</h2>
-  </div>
-
-  <audio id="audio" controls></audio>
-
-  <div class="time">
-    <span id="current">0:00</span>
-    <span id="duration">0:00</span>
-  </div>
-
-  <div class="buttons">
-    <input type="file" id="audioUpload" accept="audio/*" hidden>
-    <button onclick="audioUpload.click()">Загрузить аудио</button>
-    <button onclick="downloadAudio()" class="secondary">Скачать</button>
-    <button onclick="toggleRecord()" class="secondary" id="recBtn">🎤 Записать</button>
-  </div>
-
-  <div class="playlist" id="playlist"></div>
-</div>
-
-<script>
-const audio = document.getElementById("audio");
-const audioUpload = document.getElementById("audioUpload");
-const playlist = document.getElementById("playlist");
-const current = document.getElementById("current");
-const duration = document.getElementById("duration");
-const recBtn = document.getElementById("recBtn");
-
-let tracks = [];
-let currentAudioURL = null;
-let mediaRecorder = null;
-let recordedChunks = [];
-
-/* === ЗАГРУЗКА АУДИО === */
-audioUpload.onchange = e => {
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const url = URL.createObjectURL(file);
-  currentAudioURL = url;
-
-  tracks.push({name:file.name,url});
-  renderPlaylist();
-
-  audio.src = url;
-  audio.load();
-};
-
-/* === ПЛЕЙЛИСТ === */
-function renderPlaylist(){
-  playlist.innerHTML = "";
-  tracks.forEach(track=>{
-    const div = document.createElement("div");
-    div.textContent = track.name;
-    div.onclick = ()=>{
-      audio.src = track.url;
-      currentAudioURL = track.url;
-      audio.load();
-      audio.play().catch(()=>{});
-    };
-    playlist.appendChild(div);
-  });
-}
-
-/* === ВРЕМЯ === */
-audio.ontimeupdate = ()=>{
-  current.textContent = format(audio.currentTime);
-  duration.textContent = format(audio.duration);
-};
-
-function format(t){
-  if(!t) return "0:00";
-  const m = Math.floor(t/60);
-  const s = Math.floor(t%60).toString().padStart(2,"0");
-  return `${m}:${s}`;
-}
-
-/* === СКАЧИВАНИЕ (ПОЧИНЕНО) === */
-function downloadAudio(){
-  if(!currentAudioURL) return alert("Нет аудиофайла для скачивания");
-  const a = document.createElement("a");
-  a.href = currentAudioURL;
-  a.download = "audio";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-/* === ЗАПИСЬ ГОЛОСА (ПОЧИНЕНО) === */
-async function toggleRecord(){
-  if(!mediaRecorder || mediaRecorder.state === "inactive"){
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    mediaRecorder = new MediaRecorder(stream);
-    recordedChunks = [];
-
-    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
-    mediaRecorder.onstop = ()=>{
-      const blob = new Blob(recordedChunks,{type:"audio/webm"});
-      const url = URL.createObjectURL(blob);
-      currentAudioURL = url;
-
-      tracks.push({name:"Голос ученика",url});
-      renderPlaylist();
-
-      audio.src = url;
-      audio.load();
-    };
-
-    mediaRecorder.start();
-    recBtn.textContent="⏹ Стоп";
-    recBtn.classList.add("recording");
-  }else{
-    mediaRecorder.stop();
-    recBtn.textContent="🎤 Записать";
-    recBtn.classList.remove("recording");
-  }
-}
-</script>
-
-</body>
-</html>
+/* 🧩 ПА*
