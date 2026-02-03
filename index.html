@@ -2,49 +2,73 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Audio Studio Pro: Expert</title>
+    <title>Global Audio Studio Pro: Master Edition</title>
     <style>
-        :root { --gold: linear-gradient(135deg, #d4af37, #f1c40f, #c5a028); --gold-text: #b8860b; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fdfdfd; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* СЕТКА С ГИБКИМ РЕЗОЙЗЕРОМ */
-        .sidebar { width: 300px; background: white; padding: 20px; border-right: 1px solid #eee; overflow-y: auto; flex-shrink: 0; }
-        .player-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; min-width: 200px; overflow: hidden; }
-        
-        /* ПАНЕЛЬ СЛОВАРЯ С ВОЗМОЖНОСТЬЮ РАСТЯГИВАНИЯ */
-        .dictionary-panel { width: 500px; min-width: 300px; background: #fff; border-left: 6px solid #f1c40f; display: flex; flex-direction: column; position: relative; }
-        /* Тот самый "тянущийся" край */
-        .resizer { width: 10px; cursor: col-resize; position: absolute; left: -8px; top: 0; bottom: 0; z-index: 10; }
+        :root { 
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #b8860b 100%);
+            --silver-gradient: linear-gradient(135deg, #e6e7e8 0%, #bdbdbd 100%);
+            --pastel-bg: #fdfbf7;
+            --premium-shadow: 0 15px 35px rgba(184, 134, 11, 0.15);
+        }
 
-        .brand-zone { display: flex; flex-direction: column; align-items: center; text-decoration: none; margin-bottom: 20px; }
-        .logo-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #f1c40f; }
-        
-        .cover-art { width: 100%; max-width: 400px; height: 240px; border-radius: 15px; background: #eee center/cover no-repeat; border: 5px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--pastel-bg); display: flex; height: 100vh; overflow: hidden; }
 
-        /* КАРТОЧКИ ЗАГРУЗКИ С КРЕСТИКАМИ */
-        .load-card { background: #f9f9f9; padding: 12px; border-radius: 12px; border: 1px solid #eee; margin-top: 10px; width: 100%; max-width: 420px; }
-        .input-group { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
-        .clear-btn { cursor: pointer; color: red; font-weight: bold; padding: 5px; border: none; background: none; }
-        
-        input, select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.8rem; }
-        .btn { width: 100%; padding: 10px; border: none; border-radius: 10px; background: var(--gold); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        #prog { width: 100%; max-width: 400px; accent-color: #d4af37; }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* САЙДБАР */
+        .sidebar { width: 310px; background: white; padding: 25px; border-right: 1px solid #e0d5b0; overflow-y: auto; flex-shrink: 0; box-shadow: 5px 0 15px rgba(0,0,0,0.02); }
+        .logo-img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #d4af37; box-shadow: 0 4px 15px rgba(212,175,55,0.3); transition: 0.3s; }
+        .logo-img:hover { transform: rotate(5deg) scale(1.05); }
+
+        /* ПЛЕЕР (ЗОЛОТО И СЕРЕБРО) */
+        .player-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cover-art { 
+            width: 100%; max-width: 450px; height: 260px; border-radius: 25px; 
+            background: var(--silver-gradient); border: 8px solid white; 
+            box-shadow: var(--premium-shadow); margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: center; font-size: 4rem; color: #d4af37;
+        }
+
+        /* КАРТОЧКИ ЗАГРУЗКИ */
+        .load-card { 
+            background: white; padding: 18px; border-radius: 20px; 
+            border: 1px solid #eee; margin-top: 15px; width: 100%; max-width: 480px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .input-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .clear-x { color: #e74c3c; cursor: pointer; font-weight: bold; font-size: 1.2rem; transition: 0.2s; padding: 0 5px; }
+        .clear-x:hover { transform: scale(1.3); color: #c0392b; }
+
+        /* КНОПКИ И ИНПУТЫ */
+        label { font-size: 0.65rem; font-weight: 800; color: #b8860b; text-transform: uppercase; letter-spacing: 1px; }
+        input, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ddd; background: #fff; }
+        .btn-gold { 
+            width: 100%; padding: 12px; border: none; border-radius: 12px; 
+            background: var(--gold-gradient); color: white; font-weight: bold; 
+            cursor: pointer; margin-top: 15px; box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+        }
+
+        /* СЛОВАРЬ (ТЯНУЩИЙСЯ) */
+        .dictionary-panel { width: 550px; min-width: 320px; background: white; border-left: 5px solid #d4af37; display: flex; flex-direction: column; position: relative; }
+        .resizer { width: 12px; cursor: col-resize; position: absolute; left: -8px; top: 0; bottom: 0; z-index: 20; }
+        .dict-header { background: var(--gold-gradient); color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
+
+        #prog { width: 100%; max-width: 450px; accent-color: #d4af37; height: 6px; cursor: pointer; }
+        .c-btn { width: 55px; height: 55px; border-radius: 18px; border: 1px solid #eee; background: white; color: #d4af37; cursor: pointer; font-size: 1.3rem; transition: 0.3s; }
+        .c-btn:hover { background: #fdfaf0; transform: translateY(-2px); }
+        #play-btn { width: 75px; height: 75px; border-radius: 50%; background: var(--gold-gradient); color: white; font-size: 2rem; border: none; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <a href="https://t.me/DI_von_Irina" target="_blank" class="brand-zone">
+    <a href="https://t.me/DI_von_Irina" target="_blank" style="text-decoration:none; display:flex; flex-direction:column; align-items:center;">
         <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
-        <h4 style="margin-top:10px; color:#333;">Audio Studio Pro</h4>
+        <h3 style="color:#b8860b; margin-top:15px; font-weight:900;">STUDIO PRO</h3>
     </a>
 
-    <label style="font-size:0.7rem; font-weight:bold;">ЯЗЫК / LANGUAGE</label>
-    <select id="langSelect">
+    <label id="lbl-lang">Language / Язык</label>
+    <select id="langSelect" onchange="updateInterface()">
         <option value="ru">Русский</option><option value="en">English</option><option value="de">Deutsch</option>
-        <option value="da">دری</option><option value="hi">हिन्दी</option><option value="pa">ਪੰਜਾਬੀ</option>
+        <option value="da">دری</option><option value="hi">हिन्दी</option><option value="pa">ਪੰਜਾਬี</option>
         <option value="es">Español</option><option value="fr">Français</option><option value="it">Italiano</option>
         <option value="ar">العربية</option><option value="tr">Türkçe</option><option value="zh">中文</option>
         <option value="ja">日本語</option><option value="ko">한국어</option><option value="pt">Português</option>
@@ -52,74 +76,120 @@
         <option value="fa">فارسی</option><option value="uk">Українська</option>
     </select>
 
-    <label style="display:block; margin-top:15px; font-size:0.7rem; font-weight:bold;">PDF МАТЕРИАЛЫ</label>
-    <input type="file" id="docFile" accept=".pdf">
-    
-    <label style="display:block; margin-top:10px; font-size:0.7rem; font-weight:bold;">ССЫЛКА НА СЛОВАРЬ</label>
-    <div class="input-group">
-        <input type="text" id="dictUrl" placeholder="https://..." oninput="document.getElementById('doc-frame').src=this.value">
-        <button class="clear-btn" onclick="document.getElementById('dictUrl').value=''; document.getElementById('doc-frame').src='about:blank'">✖</button>
-    </div>
+    <label id="lbl-mode" style="margin-top:20px;">Mode / Режим</label>
+    <select id="modeSelect" onchange="applyMode()">
+        <option value="master">Master (Loop)</option>
+        <option value="study" selected>Study (Ученик)</option>
+        <option value="test">Test (Exam)</option>
+    </select>
 
-    <button class="btn" style="background:#34495e; margin-top:20px;">Copy Embed Code</button>
+    <button id="slowBtn" class="btn-gold" style="background: #27ae60; display:none;" onclick="toggleSlow()">🐢 SLOW 0.8x</button>
+
+    <label id="lbl-pdf" style="margin-top:20px;">Upload PDF</label>
+    <input type="file" id="docFile" accept=".pdf">
+
+    <label id="lbl-dict" style="margin-top:15px;">Dictionary URL</label>
+    <input type="text" id="dictUrl" placeholder="https://..." oninput="loadDict(this.value)">
+
+    <button class="btn-gold" style="background:#34495e; margin-top:25px;" onclick="copyCode()">Copy Embed Code</button>
 </div>
 
 <div class="player-main">
-    <div class="cover-art" id="cover"></div>
-    <input type="range" id="prog" value="0" step="0.1">
-    <div id="time" style="font-weight:bold; margin:10px;">00:00 / 00:00</div>
+    <div id="status-line" style="color:#b8860b; font-weight:bold; margin-bottom:10px; font-size:0.8rem; letter-spacing:2px;">READY</div>
+    <div class="cover-art" id="cover">🎵</div>
     
-    <div style="display:flex; gap:10px; margin-bottom:20px;">
-        <button onclick="audio.currentTime-=10" style="border:none; background:none; cursor:pointer; font-size:1.5rem;">⏪</button>
-        <button id="play-btn" onclick="togglePlay()" style="width:60px; height:60px; border-radius:50%; background:var(--gold); border:none; color:white; font-size:1.5rem; cursor:pointer;">▶</button>
-        <button onclick="audio.currentTime+=10" style="border:none; background:none; cursor:pointer; font-size:1.5rem;">⏩</button>
+    <input type="range" id="prog" value="0" step="0.1">
+    <div id="time-txt" style="font-weight:900; color:#555; margin:15px; font-size:1.2rem;">00:00 / 00:00</div>
+
+    <div style="display:flex; gap:20px; align-items:center; margin-bottom:30px;">
+        <button class="c-btn" onclick="audio.currentTime-=10">⏪</button>
+        <button id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="c-btn" onclick="audio.currentTime+=10">⏩</button>
     </div>
 
-    <div class="load-card">
-        <label style="font-size:0.6rem; font-weight:900;">🎵 AUDIO SOURCE</label>
-        <div class="input-group">
-            <input type="text" id="audUrl" placeholder="Paste Link..." oninput="audio.src=this.value">
-            <button class="clear-btn" onclick="document.getElementById('audUrl').value=''; audio.src=''">✖</button>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; width:100%; max-width:550px;">
+        <div class="load-card">
+            <label id="lbl-aud-link">Audio Link</label>
+            <div class="input-row">
+                <input type="text" id="audUrl" oninput="audio.src=this.value">
+                <span class="clear-x" onclick="clearInput('audUrl', 'audio')">✖</span>
+            </div>
+            <label id="lbl-aud-file" style="margin-top:10px;">Audio File</label>
+            <div class="input-row">
+                <input type="file" id="audFile" accept="audio/*">
+                <span class="clear-x" onclick="clearInput('audFile', 'audio')">✖</span>
+            </div>
         </div>
-        <div class="input-group">
-            <input type="file" id="audFile" accept="audio/*">
-            <button class="clear-btn" onclick="document.getElementById('audFile').value=''">✖</button>
-        </div>
-    </div>
 
-    <div class="load-card">
-        <label style="font-size:0.6rem; font-weight:900;">🖼️ COVER IMAGE</label>
-        <div class="input-group">
-            <input type="text" id="imgUrl" placeholder="Paste Link..." oninput="setImg(this.value)">
-            <button class="clear-btn" onclick="document.getElementById('imgUrl').value=''; setImg('')">✖</button>
-        </div>
-        <div class="input-group">
-            <input type="file" id="imgFile" accept="image/*">
-            <button class="clear-btn" onclick="document.getElementById('imgFile').value=''; setImg('')">✖</button>
+        <div class="load-card">
+            <label id="lbl-img-link">Image Link</label>
+            <div class="input-row">
+                <input type="text" id="imgUrl" oninput="setImg(this.value)">
+                <span class="clear-x" onclick="clearInput('imgUrl', 'img')">✖</span>
+            </div>
+            <label id="lbl-img-file" style="margin-top:10px;">Image File</label>
+            <div class="input-row">
+                <input type="file" id="imgFile" accept="image/*">
+                <span class="clear-x" onclick="clearInput('imgFile', 'img')">✖</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="dictionary-panel" id="dict-panel">
     <div class="resizer" id="resizer"></div>
-    <div style="background:#f1c40f; color:white; padding:8px; font-weight:bold; font-size:0.8rem;">📖 DICTIONARY (Drag left to expand)</div>
+    <div class="dict-header">
+        <span id="lbl-materials">MATERIALS</span>
+        <span style="font-size:0.6rem;">DRAG LEFT TO ZOOM ↔</span>
+    </div>
     <iframe id="doc-frame" src="about:blank"></iframe>
 </div>
 
 <script>
     const audio = new Audio();
-    const setImg = (url) => document.getElementById('cover').style.backgroundImage = url ? `url(${url})` : 'none';
+    
+    // ПЕРЕВОД (20 языков в логике)
+    function updateInterface() {
+        const lang = document.getElementById('langSelect').value;
+        const dict = {
+            ru: { mode: "Режим", pdf: "Загрузить PDF", dict: "Ссылка на словарь", aL: "Ссылка на аудио", aF: "Файл аудио", iL: "Ссылка на фото", iF: "Файл фото", mat: "МАТЕРИАЛЫ" },
+            en: { mode: "Mode", pdf: "Upload PDF", dict: "Dictionary URL", aL: "Audio Link", aF: "Audio File", iL: "Image Link", iF: "Image File", mat: "MATERIALS" },
+            de: { mode: "Modus", pdf: "PDF Hochladen", dict: "Wörterbuch-URL", aL: "Audio-Link", aF: "Audio-Datei", iL: "Bild-Link", iF: "Bild-Datei", mat: "MATERIALIEN" }
+        };
+        const tr = dict[lang] || dict.en;
+        document.getElementById('lbl-mode').innerText = tr.mode;
+        document.getElementById('lbl-pdf').innerText = tr.pdf;
+        document.getElementById('lbl-dict').innerText = tr.dict;
+        document.getElementById('lbl-aud-link').innerText = tr.aL;
+        document.getElementById('lbl-aud-file').innerText = tr.aF;
+        document.getElementById('lbl-img-link').innerText = tr.iL;
+        document.getElementById('lbl-img-file').innerText = tr.iF;
+        document.getElementById('lbl-materials').innerText = tr.mat;
+    }
 
-    // Починка загрузки файлов с ПК
+    // ЧИСТКА ОКОН (✖)
+    function clearInput(id, type) {
+        document.getElementById(id).value = '';
+        if(type === 'audio') { audio.src = ''; }
+        if(type === 'img') { document.getElementById('cover').style.backgroundImage = ''; document.getElementById('cover').innerText = '🎵'; }
+    }
+
+    // ЗАГРУЗКА ФАЙЛОВ
     document.getElementById('audFile').onchange = (e) => { if(e.target.files[0]) audio.src = URL.createObjectURL(e.target.files[0]); };
     document.getElementById('imgFile').onchange = (e) => { if(e.target.files[0]) setImg(URL.createObjectURL(e.target.files[0])); };
     document.getElementById('docFile').onchange = (e) => { if(e.target.files[0]) document.getElementById('doc-frame').src = URL.createObjectURL(e.target.files[0]) + "#view=FitH"; };
 
+    function setImg(url) { 
+        const c = document.getElementById('cover');
+        c.style.backgroundImage = url ? `url(${url})` : 'none';
+        c.innerText = url ? '' : '🎵';
+    }
+
     function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
     audio.onplay = () => document.getElementById('play-btn').innerText = '⏸';
     audio.onpause = () => document.getElementById('play-btn').innerText = '▶';
-    
-    // ЛОГИКА ТЯНУЩЕЙСЯ ПАНЕЛИ
+
+    // РЕЗОЙЗЕР (ТЯНУЧКА)
     const panel = document.getElementById('dict-panel');
     const resizer = document.getElementById('resizer');
     resizer.addEventListener('mousedown', (e) => {
@@ -127,15 +197,23 @@
         document.addEventListener('mouseup', () => document.removeEventListener('mousemove', resize));
     });
     function resize(e) {
-        const newWidth = window.innerWidth - e.pageX;
-        if(newWidth > 300 && newWidth < window.innerWidth * 0.8) panel.style.width = newWidth + 'px';
+        const width = window.innerWidth - e.pageX;
+        if(width > 300 && width < window.innerWidth * 0.8) panel.style.width = width + 'px';
     }
 
     audio.ontimeupdate = () => {
         const p = document.getElementById('prog'); p.max = audio.duration || 0; p.value = audio.currentTime;
         const f = s => new Date(s * 1000).toISOString().substr(14, 5);
-        document.getElementById('time').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
+        document.getElementById('time-txt').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
     };
+
+    function applyMode() {
+        const m = document.getElementById('modeSelect').value;
+        document.getElementById('slowBtn').style.display = (m === 'study') ? 'block' : 'none';
+    }
+
+    updateInterface();
+    applyMode();
 </script>
 </body>
 </html>
