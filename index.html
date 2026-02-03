@@ -1,36 +1,209 @@
-// Добавьте этот фрагмент в ваш блок <script> для активации режима презентации
-function togglePresentationMode() {
-    const matPanel = document.getElementById('mat-panel');
-    const isFull = matPanel.style.position === 'fixed';
-    
-    if (!isFull) {
-        // Включаем режим презентации
-        matPanel.style.position = 'fixed';
-        matPanel.style.inset = '0';
-        matPanel.style.zIndex = '9999';
-        matPanel.style.width = '100vw';
-        matPanel.style.height = '100vh';
-        // Добавляем кнопку выхода, если её нет
-        if(!document.getElementById('exit-pres')) {
-            const exitBtn = document.createElement('button');
-            exitBtn.id = 'exit-pres';
-            exitBtn.innerHTML = 'ESC ✖';
-            exitBtn.style = 'position:fixed; top:20px; right:20px; z-index:10000; padding:10px; background:red; color:white; border:none; border-radius:5px; cursor:pointer;';
-            exitBtn.onclick = togglePresentationMode;
-            document.body.appendChild(exitBtn);
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Studio Pro</title>
+    <style>
+        :root { 
+            --gold: linear-gradient(135deg, #d4af37, #f1c40f, #c5a028);
+            --gold-text: #b8860b;
         }
-    } else {
-        // Выключаем и возвращаем всё как было
-        matPanel.style.position = 'relative';
-        matPanel.style.width = '500px';
-        matPanel.style.height = '100%';
-        matPanel.style.inset = 'auto';
-        const exitBtn = document.getElementById('exit-pres');
-        if(exitBtn) exitBtn.remove();
-    }
-}
 
-// Слушатель для клавиши ESC для выхода из презентации
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && document.getElementById('exit-pres')) togglePresentationMode();
-});
+        body { 
+            font-family: 'Segoe UI', sans-serif; margin: 0; 
+            background-color: #f8f9fa; display: flex; height: 100vh; overflow: hidden; 
+        }
+
+        /* КОМПОНОВКА: Настройки (300px) | Плеер (Центр) | Словарь (Справа) */
+        .container { display: flex; width: 100%; height: 100%; }
+
+        /* ЛЕВАЯ ПАНЕЛЬ */
+        .sidebar { 
+            width: 300px; background: white; padding: 20px; 
+            border-right: 1px solid #eee; overflow-y: auto; z-index: 10;
+        }
+
+        /* ЛОГОТИП С СЫЛКОЙ В ТГ */
+        .brand-zone {
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; margin-bottom: 25px; transition: 0.3s;
+        }
+        .brand-zone:hover { transform: scale(1.1); }
+        .logo-img { 
+            width: 90px; height: 90px; border-radius: 50%; 
+            border: 3px solid #f1c40f; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .brand-name { color: #333; margin-top: 10px; font-weight: bold; font-size: 1.1rem; }
+
+        /* ЦЕНТРАЛЬНЫЙ ПЛЕЕР */
+        .player-core { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; padding: 40px; background: #ffffff;
+        }
+        .cover-art { 
+            width: 450px; height: 280px; border-radius: 20px; 
+            background: #f0f0f0 center/cover no-repeat; border: 8px solid white; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); margin-bottom: 30px;
+        }
+
+        /* ПРАВАЯ ПАНЕЛЬ (СЛОВАРЬ) */
+        .dictionary-zone { 
+            width: 550px; background: #fdfdfd; 
+            border-left: 1px solid #ddd; display: flex; flex-direction: column;
+        }
+        .dict-header { 
+            background: #f1c40f; color: white; padding: 12px; 
+            font-weight: bold; display: flex; justify-content: space-between;
+        }
+
+        /* СТИЛИ ЭЛЕМЕНТОВ (Всё как раньше) */
+        label { display: block; font-size: 0.7rem; font-weight: 800; margin-top: 15px; color: var(--gold-text); text-transform: uppercase; }
+        select, input, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--gold); color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .controls { display: flex; gap: 20px; align-items: center; margin: 20px 0; }
+        .c-btn { width: 50px; height: 50px; border-radius: 15px; border: none; background: #f8f9fa; color: #d4af37; font-size: 1.2rem; cursor: pointer; }
+        #play-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--gold); color: white; font-size: 2rem; }
+        #prog { width: 100%; max-width: 500px; accent-color: #d4af37; }
+        
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="https://t.me/DI_von_Irina" target="_blank" class="brand-zone" title="Перейти в Telegram: Deutsch interaktiv">
+            <img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" class="logo-img">
+            <div class="brand-name">Audio Studio Pro</div>
+        </a>
+
+        <label id="lbl-lang">Language / Язык</label>
+        <select id="langSelect" onchange="translateUI()">
+            <option value="ru">Русский</option><option value="en">English</option><option value="de">Deutsch</option>
+        </select>
+
+        <label id="lbl-mode">Mode / Режим</label>
+        <select id="modeSelect" onchange="applyMode()">
+            <option value="master">Master (Loop)</option>
+            <option value="study" selected>Study (Ученик)</option>
+            <option value="test">Test (Exam)</option>
+        </select>
+
+        <button class="btn" id="slowBtn" style="background:#27ae60" onclick="toggleSlow()">🐢 SLOW 0.8x</button>
+
+        <label id="lbl-pdf">Upload PDF</label>
+        <input type="file" id="docFile" accept=".pdf">
+        
+        <label id="lbl-dict">Dictionary URL</label>
+        <input type="text" id="dictUrl" placeholder="https://..." oninput="loadWebDict(this.value)">
+
+        <label id="lbl-embed">Embed Code</label>
+        <textarea id="code-out" rows="2" readonly></textarea>
+        <button class="btn" onclick="copyCode()">Copy Code</button>
+    </div>
+
+    <div class="player-core">
+        <div id="status-display" style="font-weight:900; color:red; margin-bottom:10px;"></div>
+        <div class="cover-art" id="cover-div"></div>
+        
+        <input type="range" id="prog" value="0" step="0.1" oninput="audio.currentTime=this.value">
+        <div id="time-txt" style="font-weight:bold; font-size:1.1rem; margin:10px;">00:00 / 00:00</div>
+        
+        <div class="controls">
+            <button class="c-btn" onclick="audio.currentTime-=10">⏪</button>
+            <button class="c-btn" id="play-btn" onclick="togglePlay()">▶</button>
+            <button class="c-btn" onclick="audio.currentTime+=10">⏩</button>
+        </div>
+
+        <div style="width: 100%; max-width: 500px; display: grid; gap: 10px;">
+            <div>
+                <label>Audio Source</label>
+                <input type="file" id="audFile" accept="audio/*" onchange="updateAudio(this)">
+            </div>
+            <div>
+                <label>Cover Image</label>
+                <input type="file" id="imgFile" accept="image/*" onchange="loadImg(this)">
+            </div>
+        </div>
+    </div>
+
+    <div class="dictionary-zone">
+        <div class="dict-header">
+            <span>STUDY MATERIALS</span>
+            <span style="font-size: 0.7rem; cursor:help" title="Используйте Ctrl+Колесо для Zoom">PDF VIEWER</span>
+        </div>
+        <iframe id="doc-frame" src="about:blank"></iframe>
+    </div>
+</div>
+
+<script>
+    const audio = new Audio();
+    let plays = 0;
+
+    // ВСЕ ФУНКЦИИ (Перевод, Аудио, Режимы, Ссылка) СОХРАНЕНЫ
+    function translateUI() {
+        const l = document.getElementById('langSelect').value;
+        const labels = {
+            ru: { mode: "Режим", pdf: "Загрузить PDF", dict: "Ссылка на словарь" },
+            en: { mode: "Mode", pdf: "Upload PDF", dict: "Dictionary URL" }
+        };
+        const d = labels[l] || labels.en;
+        document.getElementById('lbl-mode').innerText = d.mode;
+        document.getElementById('lbl-pdf').innerText = d.pdf;
+        document.getElementById('lbl-dict').innerText = d.dict;
+    }
+
+    function updateAudio(input) {
+        if (input.files[0]) audio.src = URL.createObjectURL(input.files[0]);
+    }
+
+    function loadImg(input) {
+        if (input.files[0]) document.getElementById('cover-div').style.backgroundImage = `url(${URL.createObjectURL(input.files[0])})`;
+    }
+
+    // Умный запуск словаря с Zoom FitH
+    document.getElementById('docFile').onchange = function(e) {
+        if(this.files[0]) {
+            const url = URL.createObjectURL(this.files[0]);
+            document.getElementById('doc-frame').src = url + "#view=FitH";
+        }
+    };
+
+    function loadWebDict(url) {
+        if(url) document.getElementById('doc-frame').src = url;
+    }
+
+    function togglePlay() { if(audio.src) audio.paused ? audio.play() : audio.pause(); }
+    
+    function toggleSlow() {
+        audio.playbackRate = (audio.playbackRate === 1) ? 0.8 : 1;
+        document.getElementById('slowBtn').style.opacity = (audio.playbackRate === 0.8) ? "0.7" : "1";
+    }
+
+    audio.onplay = () => {
+        if(document.getElementById('modeSelect').value === 'test' && audio.currentTime === 0) {
+            plays++;
+            if(plays > 2) { audio.pause(); alert("TIME IS UP"); location.reload(); }
+        }
+        document.getElementById('play-btn').innerText = '⏸';
+    };
+    audio.onpause = () => document.getElementById('play-btn').innerText = '▶';
+
+    audio.ontimeupdate = () => {
+        const p = document.getElementById('prog');
+        p.max = audio.duration || 0; p.value = audio.currentTime;
+        const f = s => new Date(s * 1000).toISOString().substr(14, 5);
+        document.getElementById('time-txt').innerText = `${f(audio.currentTime)} / ${f(audio.duration || 0)}`;
+    };
+
+    function applyMode() {
+        const m = document.getElementById('modeSelect').value;
+        document.getElementById('slowBtn').style.display = (m === 'study') ? 'block' : 'none';
+        plays = 0;
+    }
+
+    applyMode();
+    translateUI();
+</script>
+</body>
+</html>
