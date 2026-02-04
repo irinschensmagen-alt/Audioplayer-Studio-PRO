@@ -2,57 +2,52 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>AUDIO STUDIO PRO | BALANCED EDITION</title>
+    <title>AUDIO STUDIO PRO | FINAL</title>
     <style>
         :root { 
             --gold: #d4af37; --gold-light: #fdfaf0;
-            --blue: #0078d4; --dark: #1a4a7a; --bg: #fcfdfe;
-            --red: #e11d48;
+            --blue: #0078d4; --dark: #1a4a7a; --bg: #fcfdfe; --red: #e11d48;
         }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--dark); font-size: 15px; transition: 0.5s; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--dark); font-size: 15px; }
 
         /* ЛЕВАЯ ПАНЕЛЬ */
-        .sidebar-left { width: 360px; border-right: 1px solid #e2e8f0; background: white; display: flex; flex-direction: column; padding: 22px; flex-shrink: 0; z-index: 1000; }
-        .card { border: 2px solid var(--gold-light); border-radius: 18px; padding: 15px; margin-bottom: 12px; background: white; position: relative; }
+        .sidebar-left { width: 350px; border-right: 1px solid #e2e8f0; background: white; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; z-index: 1000; }
+        .card { border: 2px solid var(--gold-light); border-radius: 15px; padding: 12px; margin-bottom: 10px; background: white; }
+        label { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; display: block; }
         
-        label { font-size: 12px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
-        .inp-group { background: #f8fafc; border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; gap: 8px; border: 1.5px solid #f1f5f9; }
+        .inp-group { background: #f8fafc; border-radius: 8px; padding: 5px 10px; display: flex; align-items: center; gap: 5px; border: 1.5px solid #f1f5f9; }
+        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 14px; font-weight: 600; color: var(--dark); }
         
-        input, select { border: none; background: transparent; width: 100%; outline: none; font-size: 15px; font-weight: 600; color: var(--dark); padding: 4px 0; }
-        
-        /* КНОПКИ ВНУТРИ */
-        .btn-in { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; color: #94a3b8; display: flex; align-items: center; transition: 0.2s; }
-        .btn-in:hover { color: var(--gold); }
+        .btn-in { background: none; border: none; cursor: pointer; color: #94a3b8; font-size: 14px; display: flex; align-items: center; }
         .btn-clear:hover { color: var(--red); }
 
-        /* ФАЙЛОВЫЕ ССЫЛКИ С КРЕСТИКОМ */
-        .file-box { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-        .file-link { font-size: 12px; color: var(--blue); cursor: pointer; font-weight: 700; text-decoration: none; }
-        .btn-mini-clear { background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 11px; font-weight: bold; padding: 0 4px; }
-        .btn-mini-clear:hover { color: var(--red); }
+        /* ФАЙЛЫ И КРЕСТИКИ */
+        .file-box { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+        .file-link { font-size: 11px; color: var(--blue); cursor: pointer; font-weight: 700; text-decoration: none; }
+        .x-min { color: var(--red); cursor: pointer; font-weight: bold; font-size: 11px; margin-left: 2px; }
 
-        /* КОД */
-        .export-box { margin-top: auto; padding-top: 15px; border-top: 1px solid #eee; }
-        .code-res { width: 100%; height: 90px; font-family: 'Consolas', monospace; font-size: 12px; background: #fff; border-radius: 12px; padding: 12px; resize: none; border: 2px solid var(--gold-light); box-sizing: border-box; }
-        .copy-btn { width: 100%; background: var(--gold); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; margin-top: 10px; font-size: 15px; }
+        /* ОКНО КОДА — БЕЛОЕ */
+        .export-box { margin-top: auto; padding-top: 10px; }
+        .code-res { 
+            width: 100%; height: 90px; font-family: 'Consolas', monospace; font-size: 11px; 
+            background: #ffffff !important; color: #1a1a1a !important; 
+            border: 2px solid var(--gold) !important; border-radius: 10px; padding: 10px; 
+            resize: none; box-sizing: border-box; display: block;
+        }
+        .copy-btn { width: 100%; background: var(--gold); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 800; margin-top: 8px; }
 
-        /* ЦЕНТР / ШТОРКИ */
-        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: 0.5s ease; position: relative; }
-        .drawer { position: fixed; right: -605px; top: 0; width: 600px; height: 100%; background: white; transition: 0.5s ease; z-index: 500; box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
-        .dr-dict { border-left: 8px solid var(--gold); }
-        .dr-mat { border-left: 8px solid var(--blue); }
-        
-        body.dict-open .dr-dict, body.mat-open .dr-mat { right: 0; }
+        /* ШТОРКИ */
+        .drawer { position: fixed; right: -605px; top: 0; width: 600px; height: 100%; background: white; transition: 0.4s ease; z-index: 500; border-left: 8px solid var(--gold); box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
+        body.dict-open .drawer { right: 0; }
+        body.mat-open .drawer { right: 0; border-left-color: var(--blue); }
+
+        .side-tabs { position: fixed; right: 0; top: 40%; display: flex; flex-direction: column; gap: 10px; z-index: 1100; }
+        .tab { width: 45px; height: 55px; border: none; border-radius: 12px 0 0 12px; color: white; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: 0.4s; }
         body.dict-open .main-content, body.mat-open .main-content { margin-right: 600px; }
-
-        .side-tabs { position: fixed; right: 0; top: 40%; display: flex; flex-direction: column; gap: 12px; z-index: 1100; }
-        .tab { width: 55px; height: 65px; border: none; border-radius: 15px 0 0 15px; color: white; cursor: pointer; font-size: 1.6rem; }
-
-        /* ПЛЕЕР */
-        .preview-cover { width: 440px; height: 240px; border: 4px solid var(--gold); border-radius: 30px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 4rem; background-size: cover; background-position: center; }
-        .controls { display: flex; align-items: center; gap: 25px; margin-top: 30px; }
-        .play-btn { width: 75px; height: 75px; border-radius: 50%; background: var(--gold); border: none; color: white; font-size: 2rem; cursor: pointer; }
-        .nav-btn { background: var(--blue); color: white; border: 2px solid #333; width: 55px; height: 44px; border-radius: 8px; cursor: pointer; }
+        
+        .preview-cover { width: 380px; height: 210px; border: 3px solid var(--gold); border-radius: 20px; background: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; background-size: cover; background-position: center; }
 
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -60,100 +55,80 @@
 <body>
 
 <div class="side-tabs">
-    <button class="tab" style="background:var(--gold)" onclick="toggleDrawer('dict')">📖</button>
-    <button class="tab" style="background:var(--blue)" onclick="toggleDrawer('mat')">📂</button>
+    <button class="tab" style="background:var(--gold)" onclick="toggleD('dict')">📖</button>
+    <button class="tab" style="background:var(--blue)" onclick="toggleD('mat')">📂</button>
 </div>
 
-<div class="drawer dr-dict"><iframe id="f-dict"></iframe></div>
-<div class="drawer dr-mat"><iframe id="f-mat"></iframe></div>
+<div class="drawer" id="drawer-win"><iframe id="dr-iframe" src="about:blank"></iframe></div>
 
 <aside class="sidebar-left">
-    <div style="text-align:center; margin-bottom:15px;"><img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" width="55"></div>
+    <div style="text-align:center; margin-bottom:10px;"><img src="https://irinschensmagen-alt.github.io/Audioplayer-Studio-Pro/logo.png" width="50"></div>
     
     <div class="card"><label id="l-lang">Sprache</label><select id="langSel" onchange="updateUI()"></select></div>
     
     <div class="card">
         <label id="l-mat">Materialien</label>
         <div class="inp-group">
-            <input type="text" id="u-mat-side" placeholder="URL" oninput="gen()">
-            <button class="btn-in btn-clear" onclick="clr('u-mat-side')">✕</button>
-            <button class="btn-in" onclick="loadDrawer('mat')">📎</button>
+            <input type="text" id="u-mat" placeholder="https://..." oninput="gen()">
+            <button class="btn-in btn-clear" onclick="clr('u-mat')">✕</button>
+            <button class="btn-in" onclick="loadSide('mat')">📎</button>
         </div>
         <div class="file-box">
-            <span class="file-link">📁 <span id="f-sel-mat">Datei wählen</span></span>
-            <button class="btn-mini-clear" onclick="clrText('f-sel-mat')">✕</button>
+            <span class="file-link">📁 <span id="f-mat-txt">Datei wählen</span></span>
+            <span class="x-min" onclick="clrTxt('f-mat-txt')">✕</span>
         </div>
     </div>
 
     <div class="card"><label id="l-mode">Modus</label><select id="modeSel" onchange="gen()"></select></div>
     
-    <button style="width:100%; background:var(--blue); color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-bottom:15px; cursor:pointer; font-size:14px;">🐢 <span id="l-slow">SLOW 0.8x</span></button>
+    <button id="l-slow-btn" style="width:100%; background:var(--blue); color:white; border:none; padding:12px; border-radius:12px; font-weight:800; margin-bottom:10px; cursor:pointer; font-size:13px;">🐢 SLOW 0.8x</button>
 
     <div class="card">
         <label id="l-dict">Wörterbuch</label>
         <div class="inp-group">
-            <input type="text" id="u-dict-side" value="https://www.wiktionary.org/" oninput="gen()">
-            <button class="btn-in btn-clear" onclick="clr('u-dict-side')">✕</button>
-            <button class="btn-in" onclick="loadDrawer('dict')">📎</button>
+            <input type="text" id="u-dict" value="https://www.wiktionary.org/" oninput="gen()">
+            <button class="btn-in btn-clear" onclick="clr('u-dict')">✕</button>
+            <button class="btn-in" onclick="loadSide('dict')">📎</button>
         </div>
     </div>
 
     <div class="export-box">
-        <label id="l-code" style="color:var(--gold)">IFRAME CODE OUTPUT</label>
-        <textarea id="res-code" class="code-res" readonly placeholder="Wait for Audio link..."></textarea>
-        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+        <label style="color:var(--gold)">IFRAME CODE OUTPUT</label>
+        <textarea id="res-code" class="code-res" readonly placeholder="Wait for Audio..."></textarea>
+        <button class="copy-btn" onclick="copyC()">Copy Code</button>
     </div>
 </aside>
 
 <main class="main-content">
     <div class="preview-cover" id="cover">♫</div>
-    <div style="width:440px; display:flex; justify-content:space-between; margin-top:15px; font-weight:800; color:var(--gold); font-size:15px;"><span>0:00</span><span>0:00</span></div>
-    <input type="range" style="width:440px; accent-color:var(--gold); height:8px; cursor:pointer;">
-    
-    <div class="controls">
-        <button class="nav-btn">⏪</button>
-        <button class="play-btn">▶</button>
-        <button class="nav-btn">⏩</button>
-    </div>
-
-    <div style="display: flex; gap: 15px; margin-top: 30px; width: 100%; max-width: 850px;">
-        <div class="card" style="flex:1"><label id="l-aud">AUDIO SOURCE</label>
-            <div class="inp-group">
-                <input type="text" id="u-aud" placeholder="https://..." oninput="gen()">
-                <button class="btn-in btn-clear" onclick="clr('u-aud')">✕</button>
-            </div>
-            <div class="file-box">
-                <span class="file-link">📁 <span id="f-sel-aud">Datei wählen</span></span>
-                <button class="btn-mini-clear" onclick="clrText('f-sel-aud')">✕</button>
-            </div>
+    <div style="display: flex; gap: 15px; margin-top: 30px; width: 100%; max-width: 800px;">
+        <div class="card" style="flex:1">
+            <label id="l-aud">AUDIO SOURCE</label>
+            <div class="inp-group"><input type="text" id="u-aud" placeholder="https://..." oninput="gen()"><button class="btn-in btn-clear" onclick="clr('u-aud')">✕</button></div>
+            <div class="file-box"><span class="file-link">📁 <span id="f-aud-txt">Datei wählen</span></span><span class="x-min" onclick="clrTxt('f-aud-txt')">✕</span></div>
         </div>
-        <div class="card" style="flex:1"><label id="l-img">COVER IMAGE</label>
-            <div class="inp-group">
-                <input type="text" id="u-img" placeholder="https://..." oninput="gen()">
-                <button class="btn-in btn-clear" onclick="clr('u-img')">✕</button>
-            </div>
-            <div class="file-box">
-                <span class="file-link">📁 <span id="f-sel-img">Datei wählen</span></span>
-                <button class="btn-mini-clear" onclick="clrText('f-sel-img')">✕</button>
-            </div>
+        <div class="card" style="flex:1">
+            <label id="l-img">COVER IMAGE</label>
+            <div class="inp-group"><input type="text" id="u-img" placeholder="https://..." oninput="gen()"><button class="btn-in btn-clear" onclick="clr('u-img')">✕</button></div>
+            <div class="file-box"><span class="file-link">📁 <span id="f-img-txt">Datei wählen</span></span><span class="x-min" onclick="clrTxt('f-img-txt')">✕</span></div>
         </div>
     </div>
 </main>
 
 <script>
     const dictionary = {
-        ru: { n:"Русский", l:"Язык", a:"Аудио", i:"Картинка", m:"Материалы", md:"Режим", d:"Словарь", s:"Ученик", ms:"Мастер", t:"Тест", sl:"Замедление 0.8x", f:"Выбрать файл" },
-        de: { n:"Deutsch", l:"Sprache", a:"Audio", i:"Bild", m:"Materialien", md:"Modus", d:"Wörterbuch", s:"Lerner", ms:"Meister", t:"Test", sl:"Tempo 0.8x", f:"Datei wählen" },
-        en: { n:"English", l:"Language", a:"Audio", i:"Image", m:"Materials", md:"Mode", d:"Dictionary", s:"Study", ms:"Master", t:"Test", sl:"Slow 0.8x", f:"Choose file" },
-        it: { n:"Italiano", l:"Lingua", a:"Audio", i:"Immagine", m:"Materiali", md:"Modo", d:"Dizionario", s:"Studio", ms:"Master", t:"Test", sl:"Lento 0.8x", f:"Scegli file" },
-        fr: { n:"Français", l:"Langue", a:"Audio", i:"Image", m:"Matériels", md:"Mode", d:"Dictionnaire", s:"Étude", ms:"Maître", t:"Test", sl:"Lent 0.8x", f:"Choisir un fichier" },
-        es: { n:"Español", l:"Idioma", a:"Audio", i:"Image", m:"Materiales", md:"Modo", d:"Diccionario", s:"Estudio", ms:"Maestro", t:"Prueba", sl:"Lento 0.8x", f:"Elegir archivo" },
-        pt: { n:"Português", l:"Idioma", a:"Áudio", i:"Imagem", m:"Materiais", md:"Modo", d:"Dicionário", s:"Estudo", ms:"Mestre", t:"Teste", sl:"Lento 0.8x", f:"Escolher arquivo" },
-        ar: { n:"العربية", l:"اللغة", a:"صوت", i:"صورة", m:"المواد", md:"الوضع", d:"قاموس", s:"دراسة", ms:"Мастер", t:"اختبار", sl:"بطيء 0.8x", f:"اختيار ملف" },
-        ja: { n:"日本語", l:"言語", a:"音声", i:"画像", m:"教材", md:"モード", d:"辞書", s:"学習", ms:"マスター", t:"テスト", sl:"スロー 0.8x", f:"ファイルを選択" },
-        zh: { n:"中文", l:"语言", a:"音频", i:"图片", m:"材料", md:"模式", d:"词典", s:"学习", ms:"大师", t:"测试", sl:"慢速 0.8x", f:"选择文件" },
-        fa: { n:"فارسی", l:"زبان", a:"صوتی", i:"تصویر", m:"مواد", md:"حالت", d:"دیکشنری", s:"مطالعه", ms:"استاد", t:"تست", sl:"آهسته ۰.۸x", f:"انتخاب فایل" },
-        hi: { n:"हिन्दी", l:"भाषा", a:"ऑडियो", i:"चित्र", m:"सामग्री", md:"मोड", d:"शब्दकोश", s:"अध्ययन", ms:"मास्टर", t:"परीक्षा", sl:"धीма 0.8x", f:"फ़айл चुनें" }
+        de: { n:"Deutsch", l:"Sprache", a:"Audio", i:"Bild", m:"Materialien", md:"Modus", d:"Wörterbuch", s:"Lerner", ms:"Meister", t:"Test", f:"Datei wählen" },
+        ru: { n:"Русский", l:"Язык", a:"Аудио", i:"Картинка", m:"Материалы", md:"Режим", d:"Словарь", s:"Ученик", ms:"Мастер", t:"Тест", f:"Выбрать файл" },
+        it: { n:"Italiano", l:"Lingua", a:"Audio", i:"Immagine", m:"Materiali", md:"Modo", d:"Dizionario", s:"Studio", ms:"Master", t:"Test", f:"Scegli file" },
+        fr: { n:"Français", l:"Langue", a:"Audio", i:"Image", m:"Matériels", md:"Mode", d:"Dictionnaire", s:"Étude", ms:"Maître", t:"Test", f:"Choisir un fichier" },
+        es: { n:"Español", l:"Idioma", a:"Audio", i:"Image", m:"Materiales", md:"Modo", d:"Diccionario", s:"Estudio", ms:"Maestro", t:"Prueba", f:"Elegir archivo" },
+        pt: { n:"Português", l:"Idioma", a:"Áudio", i:"Imagem", m:"Materiais", md:"Modo", d:"Dicionário", s:"Estudo", ms:"Mestre", t:"Teste", f:"Escolher arquivo" },
+        ar: { n:"العربية", l:"اللغة", a:"صوت", i:"صورة", m:"المواد", md:"الوضع", d:"قاموس", s:"دراسة", ms:"Мастер", t:"اختبار", f:"اختيار ملف" },
+        ja: { n:"日本語", l:"言語", a:"音声", i:"画像", m:"教材", md:"モード", d:"辞書", s:"学習", ms:"マスター", t:"テスト", f:"ファイルを選択" },
+        zh: { n:"中文", l:"语言", a:"音频", i:"图片", m:"材料", md:"模式", d:"词典", s:"学习", ms:"大师", t:"测试", f:"选择文件" },
+        fa: { n:"فارسی", l:"زبان", a:"صوتی", i:"تصویر", m:"مواد", md:"حالت", d:"دیکشنری", s:"مطالعه", ms:"استاد", t:"تست", f:"انتخاب فایل" },
+        ps: { n:"دري", l:"ژبه", a:"غږ", i:"انځور", m:"مواد", md:"حالت", d:"قاموس", s:"لوست", ms:"ماسټر", t:"ازموینه", f:"فایل غوره کړئ" },
+        hi: { n:"हिन्दी", l:"भाषा", a:"ऑдио", i:"चित्र", m:"सामग्री", md:"मोड", d:"शब्दकोश", s:"अध्ययन", ms:"मास्टर", t:"परीक्षा", f:"फ़айл चुनें" }
     };
 
     function updateUI() {
@@ -162,50 +137,45 @@
         document.getElementById('l-lang').innerText = t.l; document.getElementById('l-aud').innerText = t.a;
         document.getElementById('l-img').innerText = t.i; document.getElementById('l-mat').innerText = t.m;
         document.getElementById('l-mode').innerText = t.md; document.getElementById('l-dict').innerText = t.d;
-        document.getElementById('l-slow').innerText = t.sl;
-        document.getElementById('f-sel-mat').innerText = t.f; document.getElementById('f-sel-aud').innerText = t.f; document.getElementById('f-sel-img').innerText = t.f;
+        document.getElementById('f-mat-txt').innerText = t.f; document.getElementById('f-aud-txt').innerText = t.f; document.getElementById('f-img-txt').innerText = t.f;
         const m = document.getElementById('modeSel'); m.innerHTML = '';
         m.add(new Option(t.s, 'study')); m.add(new Option(t.ms, 'master')); m.add(new Option(t.t, 'test'));
         gen();
     }
 
-    function clr(id) { document.getElementById(id).value = ""; gen(); }
-    function clrText(id) { 
-        const lang = document.getElementById('langSel').value;
-        document.getElementById(id).innerText = dictionary[lang].f; 
-    }
+    function clr(id) { document.getElementById(id).value = (id==='u-dict'?'https://www.wiktionary.org/':''); gen(); }
+    function clrTxt(id) { const lang = document.getElementById('langSel').value; document.getElementById(id).innerText = dictionary[lang].f; }
 
     function gen() {
-        const aud = document.getElementById('u-aud').value;
-        const img = document.getElementById('u-img').value;
+        const aud = document.getElementById('u-aud').value.trim();
+        const img = document.getElementById('u-img').value.trim();
         const mode = document.getElementById('modeSel').value;
         const lang = document.getElementById('langSel').value;
-        const dict = document.getElementById('u-dict-side').value;
-        const mat = document.getElementById('u-mat-side').value;
+        const dict = document.getElementById('u-dict').value.trim();
+        const mat = document.getElementById('u-mat').value.trim();
+
         if(img) document.getElementById('cover').style.backgroundImage = `url(${img})`;
         else document.getElementById('cover').style.backgroundImage = 'none';
+
         if(!aud) { document.getElementById('res-code').value = ""; return; }
-        document.getElementById('res-code').value = `<iframe src="https://studio-player.pro/?aud=${encodeURIComponent(aud)}&img=${encodeURIComponent(img)}&mode=${mode}&lang=${lang}&dict=${encodeURIComponent(dict)}&mat=${encodeURIComponent(mat)}" width="100%" height="750" frameborder="0"></iframe>`;
+
+        const params = new URLSearchParams({ aud, img, mode, lang, dict, mat }).toString();
+        document.getElementById('res-code').value = `<iframe src="https://studio-player.pro/?${params}" width="100%" height="750" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>`;
     }
 
-    function toggleDrawer(type) {
-        const isOpen = document.body.classList.contains(type + '-open');
-        document.body.classList.remove('dict-open', 'mat-open');
-        if (!isOpen) {
-            document.body.classList.add(type + '-open');
-            loadDrawer(type);
+    function toggleD(type) {
+        const b = document.body;
+        const isCurrent = b.classList.contains(type + '-open');
+        b.classList.remove('dict-open', 'mat-open');
+        if (!isCurrent) {
+            b.classList.add(type + '-open');
+            const url = type === 'dict' ? document.getElementById('u-dict').value : document.getElementById('u-mat').value;
+            document.getElementById('dr-iframe').src = url || 'about:blank';
         }
     }
 
-    function loadDrawer(type) {
-        const url = type === 'dict' ? document.getElementById('u-dict-side').value : document.getElementById('u-mat-side').value;
-        if (url) document.getElementById('f-' + type).src = url;
-    }
-
-    function copyCode() {
-        const area = document.getElementById('res-code');
-        area.select(); document.execCommand('copy');
-    }
+    function loadSide(type) { toggleD(type); }
+    function copyC() { const a = document.getElementById('res-code'); a.select(); document.execCommand('copy'); }
 
     const sel = document.getElementById('langSel');
     Object.keys(dictionary).forEach(k => sel.add(new Option(dictionary[k].n, k)));
